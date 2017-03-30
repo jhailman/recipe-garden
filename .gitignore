@@ -1,0 +1,8 @@
+# Virtualenv
+*.env/
+
+# Packaging
+recipe_garden.egg-info
+
+# Other
+recipe-garden/__pycache__/

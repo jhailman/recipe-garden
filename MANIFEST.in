@@ -1,0 +1,3 @@
+graft recipe_garden/templates
+graft recipe_garden/static
+include recipe_garden/schema.sql
