@@ -4,10 +4,11 @@ import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
+from flask_restful import Api
 
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__) # load config from this file, recipe_garden.py
-print(__name__)
+api = Api(app)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -20,4 +21,12 @@ app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True)
 
 # Import submodules - the imports are written here because they're modifying the `app` global.
 
-from .database import *
+#from .database import *
+
+# Set up resources
+from api.recipes import RecipeResource
+
+api.add_resource(RecipeResource, '/recipes')
+
+if __name__ == "__main__":
+    app.run()
