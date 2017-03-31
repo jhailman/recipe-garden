@@ -52,9 +52,9 @@ $ pip install --editable .
 ```
 
 5. Run the server locally
-
+The main file is located in `/recipe_garden/recipe_garden.py`.
 ```
-$ flask run
+python recipe_garden.py
 ```
 
 See the source code for other flask commands we have registered.
