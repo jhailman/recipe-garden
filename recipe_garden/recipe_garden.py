@@ -24,9 +24,12 @@ app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True)
 #from .database import *
 
 # Set up resources
-from api.recipes import RecipeResource
+from api.recipes import RecipesById, RecipesByName
+from api.users import Users
 
-api.add_resource(RecipeResource, '/recipes')
+api.add_resource(RecipesByName, '/recipes/named/<string:recipe_name>')
+api.add_resource(RecipesById, '/recipes/<int:recipe_id>')
+api.add_resource(Users, '/users/<int:user_id>')
 
 if __name__ == "__main__":
     app.run()
