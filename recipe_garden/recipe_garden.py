@@ -12,24 +12,23 @@ api = Api(app)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE='/tmp/recipe-garden.db', #os.path.join(app.root_path, 'recipe-garden.db'),
+    DATABASE_PATH='/tmp/recipe-garden.db', #os.path.join(app.root_path, 'recipe-garden.db'),
     SECRET_KEY='wow-so-secret-very-key',
     USERNAME='admin',
     PASSWORD='default'
 ))
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True)
 
-# Import submodules - the imports are written here because they're modifying the `app` global.
+# Set up database
+from database import db_session
 
-#from .database import *
+@app.teardown_appcontext
+def shutdown_db(error):
+    db_session.remove()
 
-# Set up resources
-from api.recipes import RecipesById, RecipesByName
-from api.users import Users
-
-api.add_resource(RecipesByName, '/recipes/named/<string:recipe_name>')
-api.add_resource(RecipesById, '/recipes/<int:recipe_id>')
-api.add_resource(Users, '/users/<int:user_id>')
+@app.route('/')
+def main_page():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run()

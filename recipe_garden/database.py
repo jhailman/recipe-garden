@@ -1,25 +1,21 @@
-import sqlite3
+from sqlalchemy import create_engine, MetaData
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-def start_db(path):
-    """Open a database connection (SQLite from the tutorial)"""
-    db = sqlite3.connect(path)
-    db.row_factory = sqlite3.Row
-    return db
+metadata = MetaData() # http://flask.pocoo.org/docs/0.12/patterns/sqlalchemy/
 
-@app.teardown_appcontext
-def handler_close_db(error):
-    """Closes the database at the end of the request"""
-    if hasattr(g, 'db'):
-        g.sqlite_db.close()
+engine = create_engine('sqlite:////tmp/recipe-garden.db',
+                       convert_unicode=True)
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+metadata.create_all(bind=engine)
 
-@app.cli.command('initdb')
-def command_init_db():
-    """CLI command to create the database by running the schema"""
-    db = get_db()
+def run_db_schema():
+    """Run the schema to initialize the database"""
     with app.open_resource('schema.sql', mode='r') as schema:
-        db.cursor().executescript(schema.read())
+        engine.execute(schema.read())
     db.commit()
     print("Initialized the database")
 
-# TODO
-#g.get_db = lambda: g.db if hasattr(g, 'db') else connect_db(app.config['DATABASE'])
+def close_db():
+    pass
