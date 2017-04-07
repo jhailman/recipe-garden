@@ -20,15 +20,21 @@ app.config.update(dict(
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True)
 
 # Set up database
-from database import db_session
+from database import db_session, run_db_schema
+from common.user import Users
 
 @app.teardown_appcontext
 def shutdown_db(error):
+    """Handler to close the DB"""
     db_session.remove()
+
 
 @app.route('/')
 def main_page():
-    return render_template("index.html")
+    user = Users.get_by_id(1)
+    return render_template("home.html.j2", user=user)
 
 if __name__ == "__main__":
+    init_db()
+    run_db_schema()
     app.run()
