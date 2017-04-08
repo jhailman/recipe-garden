@@ -1,9 +1,10 @@
+from werkzeug.security import check_password_hash, generate_password_hash
 from ..recipe_garden import app, get_db
 
 GET_BY_ID = "SELECT * FROM users WHERE id = ?"
 FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?"
 FIND_BY_NAME = "SELECT * FROM users WHERE name = ?"
-CHECK_PASSWORD = ""
+REGISTER = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
 
 class User():
     """User representation in DB and static methods for access"""
@@ -11,6 +12,7 @@ class User():
         self.id = row['id']
         self.name = row['name']
         self.email = row['email']
+        self.password = row['password']
 
     def __repr__(self):
         return '<User %r (%r)>' % (self.name, self.email)
@@ -29,3 +31,32 @@ class User():
         user_data = cursor.execute(FIND_BY_EMAIL, (email,)).fetchone()
         cursor.close()
         return User(user_data)
+
+    @staticmethod
+    def register(name, email, clearpass):
+        """
+        Attempts to register a user with the given name, email, and passsword.
+        Throws an `Exception` if a user with that email already exists.
+        """
+        if User.find_by_email(email):
+            raise Exception("A user with that email already exists.")
+
+        hashed_pass = generate_password_hash(clearpass)
+        db = get_db()
+        inserted = db.execute(REGISTER, (name, email, hashed_pass)).fetchone()
+        return User(inserted)
+
+    @staticmethod
+    def login(email, clearpass):
+        """
+        Attempts to authenticate as a user with given email and password.
+        Returns the `User` object if the password is correct.
+        Throws an `Exception` for invalid email or invalid password.
+        The difference between the two should be kept secret from the user, however.
+        """
+        user = User.find_by_email(email)
+        if not user:
+            raise Exception("Invalid email %d" % email)
+        if not check_password_hash(user.password, clearpass):
+            raise Exception("Invalid password for %d" % email)
+        return user
