@@ -1,10 +1,11 @@
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE IF NOT EXISTS users (
-  `id` INT NOT NULL, -- AUTO_INCREMENT doesn't work here for some reason
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `name` VARCHAR(256) NOT NULL,
-  `email` VARCHAR(128) NOT NULL,
-  PRIMARY KEY (id)
+  `email` VARCHAR(128) NOT NULL
 );
 
-INSERT INTO users (id, name, email) VALUES (
-    1, "footastic95", "foo@foo.com"
+INSERT INTO users (name, email) VALUES (
+    "footastic95", "foo@foo.com"
 );

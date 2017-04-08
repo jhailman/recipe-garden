@@ -42,8 +42,9 @@ def main_page():
     return render_template("home.html.j2", user=user)
 
 if __name__ == "recipe_garden.recipe_garden":
-    try:
-        run_db_schema()
-    except Exception as err:
-        # do nothing
-        pass
+    # try:
+    #     run_db_schema()
+    # except Exception as err:
+    #     # do nothing
+    #     pass
+    run_db_schema()
