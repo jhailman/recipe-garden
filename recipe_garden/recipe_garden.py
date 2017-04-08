@@ -5,13 +5,13 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 from flask_restful import Api
 from database import db_session
+from common.user import User
 
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__) # load config from this file, recipe_garden.py
 api = Api(app)
 LOG = app.logger
 
-import common.user.User as User
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -34,13 +34,16 @@ def run_db_schema():
 def shutdown_db(error):
     app.logger.warn("Closing the database!!!")
     """Handler to close the DB"""
-    #db_session.close()
+    db_session.close()
 
 @app.route('/')
 def main_page():
     user = User.get_by_id(1)
     return render_template("home.html.j2", user=user)
 
-if __name__ == "__main__":
-    run_db_schema()
-    app.run()
+if __name__ == "recipe_garden.recipe_garden":
+    try:
+        run_db_schema()
+    except Exception as err:
+        # do nothing
+        pass

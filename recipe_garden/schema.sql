@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS users (
-  `id` INTEGER NOT NULL,
+  `id` INT NOT NULL, -- AUTO_INCREMENT doesn't work here for some reason
   `name` VARCHAR(256) NOT NULL,
   `email` VARCHAR(128) NOT NULL,
   PRIMARY KEY (id)
 );
 
-INSERT INTO users (name, email) VALUES (
-    "footastic95", "foo@foo.com"
+INSERT INTO users (id, name, email) VALUES (
+    1, "footastic95", "foo@foo.com"
 );

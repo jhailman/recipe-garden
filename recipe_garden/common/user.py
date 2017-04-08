@@ -1,5 +1,5 @@
-from database import db_session
-import recipe_garden.LOG as LOG
+from ..database import db_session
+from ..recipe_garden import *
 
 class User():
     """User representation in DB"""
@@ -17,6 +17,6 @@ class User():
 
     @staticmethod
     def get_by_id(id_):
-        return User(db_session.execute(
-            "select * from users where user.id = ?", (id_,))
-            .findone())
+        out = db_session.execute(
+            "select * from users where id = ?", (id_,))
+        return User(1, "foo", "foo@fooo.com")
