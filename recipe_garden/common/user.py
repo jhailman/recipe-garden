@@ -15,8 +15,8 @@ class User():
         print("Creating user from %d", str(table))
         User(table['id'], table['name'], table['email'])
 
+    @staticmethod
     def get_by_id(id_):
-        """Gets a user by database ID"""
         return User(db_session.execute(
-            "select * from users where users.id = ?", (id_,))
-            .fetchone())
+            "select * from users where user.id = ?", (id_,))
+            .findone())
