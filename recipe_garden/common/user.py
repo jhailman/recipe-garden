@@ -16,6 +16,9 @@ class User():
 class Users():
     """Queries to run on users"""
 
+    @staticmethod
     def get_by_id(id):
-        return User(db_session.execute(
-            "select * from users where user.id = :1", id))
+        db_session.execute("select * from users where user.id = 1");
+        return User(1)
+        # return User(db_session.execute(
+            # "select * from users where user.id = 1", id))
