@@ -1,40 +1,44 @@
 """Application entry point"""
 
-import os
+import sqlite3.dbapi2 as sqlite3
+
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, _app_ctx_stack
 from flask_restful import Api
-from database import db_session
-from common.user import User
+
+# These values are automatically added to the config
+DB_PATH = '/tmp/recipe-garden.sqlite'
 
 app = Flask(__name__) # create the application instance
-app.config.from_object(__name__) # load config from this file, recipe_garden.py
-api = Api(app)
-LOG = app.logger
+app.config.from_object(__name__) # load the values set above into config
+app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with env var
+api = Api(app) # Create REST API
+
+def get_db(): # See flask tutorial `minitwit`
+    """Gets an application-context-specific DB connection"""
+    top = _app_ctx_stack.top
+    if not hasattr(top, 'db'):
+        top.db = sqlite3.connect(app.config['DB_PATH'])
+        top.db.row_factory = sqlite3.Row
+    return top.db
 
 
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE_PATH='/tmp/recipe-garden.db', #os.path.join(app.root_path, 'recipe-garden.db'),
-    SECRET_KEY='wow-so-secret-very-key',
-    USERNAME='admin',
-    PASSWORD='default'
-))
-app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True)
+# Import stuff from common after creating `app` and `get_db`
+from .common.user import User
 
 # Set up database
 def run_db_schema():
     """Run the schema to initialize the database"""
+    app.logger.info("Initializing the database")
+    db = get_db()
     with app.open_resource('schema.sql', mode='r') as schema:
-        cursor = db_session.executescript(schema.read())
-        db_session.commit()
-
+        db.executescript(schema.read())
+    db.commit()
 
 @app.teardown_appcontext
 def shutdown_db(error):
-    app.logger.warn("Closing the database!!!")
-    """Handler to close the DB"""
-    db_session.close()
+    """Handler to close the DB at the end of application contexts"""
+    get_db().close()
 
 @app.route('/')
 def main_page():
@@ -47,4 +51,4 @@ if __name__ == "recipe_garden.recipe_garden":
     # except Exception as err:
     #     # do nothing
     #     pass
-    run_db_schema()
+    pass
