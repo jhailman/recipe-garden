@@ -5,4 +5,5 @@
 recipe_garden.egg-info
 
 # Other
-recipe-garden/__pycache__/
+recipe_garden/**/__pycache__
+#recipe_garden/api/__pycache__

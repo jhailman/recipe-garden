@@ -1,3 +1,4 @@
 graft recipe_garden/templates
 graft recipe_garden/static
+graft recipe_garden/api
 include recipe_garden/schema.sql
