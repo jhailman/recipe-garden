@@ -39,12 +39,11 @@ def shutdown_db(error):
 @app.route('/')
 def main_page():
     user = User.get_by_id(1)
-    return render_template("home.html.j2", user=user)
+    return render_template("home.html", user=user)
 
 if __name__ == "recipe_garden.recipe_garden":
-    # try:
-    #     run_db_schema()
-    # except Exception as err:
-    #     # do nothing
-    #     pass
-    run_db_schema()
+    try:
+        run_db_schema()
+    except Exception as err:
+        # do nothing
+        pass
