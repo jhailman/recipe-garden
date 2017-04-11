@@ -1,10 +1,10 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from ..recipe_garden import get_db
 
-GET_BY_ID = "SELECT * FROM users WHERE id = ?"
-FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?"
-FIND_BY_NAME = "SELECT * FROM users WHERE name = ?"
-REGISTER = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+GET_BY_ID = "SELECT * FROM user WHERE id = ?"
+FIND_BY_EMAIL = "SELECT * FROM user WHERE email = ?"
+FIND_BY_NAME = "SELECT * FROM user WHERE name = ?"
+REGISTER = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)"
 
 class User:
     """User representation in DB and static methods for access"""
