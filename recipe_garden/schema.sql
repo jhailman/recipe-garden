@@ -9,7 +9,7 @@ USE recipe_schema;
 DROP TABLE IF EXISTS user;
 CREATE TABLE user
 (
-  id           INTEGER auto_increment,
+  id           INT(11)      NOT NULL,
   name	       VARCHAR(45) 	NOT NULL,
   password	   VARCHAR(93)	NOT NULL,
   email        VARCHAR(128) NOT NULL,
@@ -19,9 +19,8 @@ CREATE TABLE user
 DROP TABLE IF EXISTS ingredient;
 CREATE TABLE ingredient
 (
-  id           INT(11)		NOT NULL,
-  iname 	     VARCHAR(45)	NOT NULL,
-  PRIMARY KEY (id)
+  name 	     VARCHAR(45)	NOT NULL,
+  PRIMARY KEY (name)
 );
 
 DROP TABLE IF EXISTS recipe;
@@ -51,11 +50,11 @@ CREATE TABLE recipe_ingredient
 (
   id            INT(11)		NOT NULL,
   recipe_id     INT(11)		NOT NULL,
-  ingredient_id	INT(11)		NOT NULL,
+  ingredient  	VARCHAR(45)	NOT NULL,
   amount        VARCHAR(45),
   PRIMARY KEY (id),
   FOREIGN KEY (recipe_id) REFERENCES recipe(id),
-  FOREIGN KEY (ingredient_id) REFERENCES ingredient(id)
+  FOREIGN KEY (ingredient) REFERENCES ingredient(name)
 );
 
 DROP TABLE IF EXISTS shopping_list;
@@ -78,6 +77,6 @@ CREATE TABLE favorites
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-INSERT INTO users (name, email) VALUES (
-    "footastic95", "foo@foo.com"
+INSERT INTO user (id, name, password, email) VALUES (
+    1, "footastic95", "footastic95", "foo@foo.com"
 );
