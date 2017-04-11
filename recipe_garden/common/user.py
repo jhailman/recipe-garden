@@ -1,12 +1,12 @@
 from werkzeug.security import check_password_hash, generate_password_hash
-from ..recipe_garden import app, get_db
+from ..recipe_garden import get_db
 
 GET_BY_ID = "SELECT * FROM users WHERE id = ?"
 FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?"
 FIND_BY_NAME = "SELECT * FROM users WHERE name = ?"
 REGISTER = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
 
-class User():
+class User:
     """User representation in DB and static methods for access"""
     def __init__(self, row):
         self.id = row['id']
@@ -23,14 +23,20 @@ class User():
         cursor = get_db().cursor()
         user_data = cursor.execute(GET_BY_ID, (id_,)).fetchone()
         cursor.close()
-        return User(user_data)
+        if user_data:
+            return User(user_data)
+        else:
+            return None
 
     @staticmethod
     def find_by_email(email):
         cursor = get_db().cursor()
         user_data = cursor.execute(FIND_BY_EMAIL, (email,)).fetchone()
         cursor.close()
-        return User(user_data)
+        if user_data:
+            return User(user_data)
+        else:
+            return None
 
     @staticmethod
     def register(name, email, clearpass):
@@ -42,9 +48,11 @@ class User():
             raise Exception("A user with that email already exists.")
 
         hashed_pass = generate_password_hash(clearpass)
-        db = get_db()
-        inserted = db.execute(REGISTER, (name, email, hashed_pass)).fetchone()
-        return User(inserted)
+        cursor = get_db().cursor()
+        cursor.execute(REGISTER, (name, email, hashed_pass))
+        inserted_id = cursor.lastrowid
+        cursor.close()
+        return User({ "id": inserted_id, "name": name, "email": email, "password": "" })
 
     @staticmethod
     def login(email, clearpass):
@@ -56,7 +64,7 @@ class User():
         """
         user = User.find_by_email(email)
         if not user:
-            raise Exception("Invalid email %d" % email)
+            raise Exception("Invalid email %s" % email)
         if not check_password_hash(user.password, clearpass):
-            raise Exception("Invalid password for %d" % email)
+            raise Exception("Invalid password for %s" % email)
         return user
