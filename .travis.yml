@@ -7,3 +7,7 @@ install:
 
 script:
   - pytest
+
+notifications:
+    # Why the hell isn't this the default
+    email: false
