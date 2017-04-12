@@ -12,10 +12,10 @@ from flask_restful import Api
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__) # load the values set above into config
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with env var
-api = Api(app) # Create REST API
+#api = Api(app) # Create REST API
 
 def create_db_engine():
-    url = app.config['MYSQL_URL']
+    url = getattr(app.config, 'MYSQL_URL', None)
     if not url:
         user = os.environ['RECIPE_GARDEN_MYSQL_USER'] or 'root'
         password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] or 'root'
@@ -34,6 +34,7 @@ def create_db_engine():
         connection.close()
         app.logger.info("Created recipe_garden database from schema.")
     return engine
+
 
 db_engine = create_db_engine()
 
