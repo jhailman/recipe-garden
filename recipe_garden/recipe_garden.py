@@ -11,6 +11,7 @@ DB_PATH = '/tmp/recipe-garden.sqlite'
 
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__) # load the values set above into config
+app.secret_key = "super secret key"
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with env var
 api = Api(app) # Create REST API
 
@@ -43,7 +44,8 @@ def shutdown_db(error):
 def main_page():
     if 'email' in session:
         # TODO: Look for the actual user
-        user = User(1, session['email'], "foo@foo.com")
+        # user = User(1, session['email'], "foo@foo.com"
+        pass
     else:
         user = None
     return render_template("home.html")
@@ -54,7 +56,7 @@ def login_page():
         email = request.form['email']
         clearpass = request.form['password']
         # TODO: Check credentials
-        session['email'] = email
+        user = User.login(email, clearpass)
         return redirect(url_for('main_page'))
     else:
         return render_template("login.html")
@@ -66,7 +68,13 @@ def registration_page():
         clearpass = request.form['password']
         email = request.form['email']
         # TODO: Create new user in database here
-        return redirect(url_for('login_page'))
+        try:
+            user = User.register(username, email, clearpass)
+            flash('Successfully registered')
+            return redirect(url_for('login_page'))
+        except Exception as err:
+            flash(str(err))
+            return redirect(url_for('registration_page'))
     else:
         return render_template("register.html")
 
