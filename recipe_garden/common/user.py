@@ -1,15 +1,16 @@
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import text
 from ..recipe_garden import get_db
 
-GET_BY_ID = "SELECT * FROM user WHERE id = ?"
+GET_BY_ID = text("SELECT * FROM user WHERE id = :id")
 
-FIND_BY_EMAIL = "SELECT * FROM user WHERE email = ?"
-FIND_BY_NAME = "SELECT * FROM user WHERE name = ?"
-REGISTER = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)"
+FIND_BY_EMAIL = text("SELECT * FROM user WHERE email = :email")
+FIND_BY_NAME = text("SELECT * FROM user WHERE name = :name")
+REGISTER = text("INSERT INTO user (name, email, password) VALUES (:name, :email, :password)")
 
-GET_RECIPES = "SELECT * FROM recipe WHERE user_id = ?"
-GET_FAVORITES = "SELECT * FROM favorite WHERE user_id = ?"
-GET_SHOPPING_LISTS = "SELECT * FROM shopping_list WHERE user_id = ?"
+GET_RECIPES = text("SELECT * FROM recipe WHERE user_id = :user_id")
+GET_FAVORITES = text("SELECT * FROM favorite WHERE user_id = :user_id")
+GET_SHOPPING_LISTS = text("SELECT * FROM shopping_list WHERE user_id = :user_id")
 
 class User:
     """User representation in DB and static methods for access"""
@@ -29,9 +30,8 @@ class User:
     @staticmethod
     def get_by_id(id_):
         """Gets a user with the given ID"""
-        cursor = get_db().cursor()
-        user_data = cursor.execute(GET_BY_ID, (id_,)).fetchone()
-        cursor.close()
+        db = get_db()
+        user_data = db.execute(GET_BY_ID, id=id_ ).fetchone()
         if user_data:
             return User(user_data)
         else:
@@ -39,9 +39,8 @@ class User:
 
     @staticmethod
     def find_by_email(email):
-        cursor = get_db().cursor()
-        user_data = cursor.execute(FIND_BY_EMAIL, (email,)).fetchone()
-        cursor.close()
+        db = get_db()
+        user_data = cursor.execute(FIND_BY_EMAIL, email= email).fetchone()
         if user_data:
             return User(user_data)
         else:
@@ -57,10 +56,9 @@ class User:
             raise Exception("A user with that email already exists.")
 
         hashed_pass = generate_password_hash(clearpass)
-        cursor = get_db().cursor()
-        cursor.execute(REGISTER, (name, email, hashed_pass))
-        inserted_id = cursor.lastrowid
-        cursor.close()
+        db = get_db()
+        db.execute(REGISTER, name=name, email=email, password=hashed_pass)
+        inserted_id = db.inserted_primary_key
         return User({ "id": inserted_id, "name": name, "email": email, "password": "" })
 
     @staticmethod

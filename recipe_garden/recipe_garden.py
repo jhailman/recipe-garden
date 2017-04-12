@@ -14,26 +14,47 @@ app.config.from_object(__name__) # load the values set above into config
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with env var
 #api = Api(app) # Create REST API
 
+global DATABASE_SET
+DATABASE_SET = False
+
 def create_db_engine():
-    url = getattr(app.config, 'MYSQL_URL', None)
-    if not url:
-        user = os.environ['RECIPE_GARDEN_MYSQL_USER'] or 'root'
-        password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] or 'root'
-        url = "mysql+pymysql://{user}:{password}@localhost/".format(
-            user=user, password=password)
-    engine = create_engine(url, encoding = 'UTF-8')
-    try:
-        engine.execute("use recipe_garden")
-    except:
-        app.logger.info("Could select database recipe_garden, assuming it must be created.")
-        connection = engine.raw_connection()
-        cursor = connection.cursor()
-        with app.open_resource('schema.sql', mode='r') as schema:
-            cursor.execute(schema.read())
-        cursor.close()
-        connection.close()
-        app.logger.info("Created recipe_garden database from schema.")
-    return engine
+    global DATABASE_SET
+    if DATABASE_SET:
+        return db_engine
+    DATABASE_SET = True
+    app.logger.info("Begin create_db_engine")
+    with app.app_context():
+        app.logger.info("In app get context")
+        url = getattr(app.config, 'MYSQL_URL', None) if hasattr(app.config, 'MYSQL_URL') else None
+        app.logger.info("Got a URL")
+        if not url:
+            app.logger.info("There is no URL")
+            user = os.environ['RECIPE_GARDEN_MYSQL_USER'] or 'root'
+            password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] or 'root'
+            url = "mysql+pymysql://{user}:{password}@localhost/".format(
+                user=user, password=password)
+        app.logger.info("Creating engine with url %s", url)
+        try:
+            engine = create_engine(url) #, encoding = 'UTF-8')
+        except Exception as ex:
+            app.logger.error(ex)
+        app.logger.info("Created engine")
+        try:
+            engine.execute("use recipe_schema")
+        except Exception as e:
+            app.logger.error(e)
+            app.logger.debug("Could select database recipe_schema, assuming it must be created.")
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+            with app.open_resource('schema.sql', mode='r') as schema:
+                app.logger.info("Opened schema")
+                cursor.execute(schema.read())
+            cursor.close()
+            cursor.commit()
+            connection.close()
+            connection.commit()
+            app.logger.info("Created recipe_garden database from schema.")
+        return engine
 
 
 db_engine = create_db_engine()
