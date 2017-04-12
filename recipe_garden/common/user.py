@@ -1,24 +1,70 @@
-from ..database import db_session
-from ..recipe_garden import *
-import sys
+from werkzeug.security import check_password_hash, generate_password_hash
+from ..recipe_garden import get_db
 
-class User():
-    """User representation in DB"""
-    def __init__(self, id=0, name=None, email=None):
-        self.id = id
-        self.name = name
-        self.email = email
+GET_BY_ID = "SELECT * FROM user WHERE id = ?"
+FIND_BY_EMAIL = "SELECT * FROM user WHERE email = ?"
+FIND_BY_NAME = "SELECT * FROM user WHERE name = ?"
+REGISTER = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)"
+
+class User:
+    """User representation in DB and static methods for access"""
+    def __init__(self, row):
+        self.id = row['id']
+        self.name = row['name']
+        self.email = row['email']
+        self.password = row['password']
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
-
-    def from_db(**table):
-        print("Creating user from %d", str(table))
-        User(table['id'], table['name'], table['email'])
+        return '<User %r (%r)>' % (self.name, self.email)
 
     @staticmethod
     def get_by_id(id_):
-        out = db_session.execute(
-            "select * from users where id = ?", (id_,)).fetchone()
+        """Gets a user with the given ID"""
+        cursor = get_db().cursor()
+        user_data = cursor.execute(GET_BY_ID, (id_,)).fetchone()
+        cursor.close()
+        if user_data:
+            return User(user_data)
+        else:
+            return None
 
-        return User(out[0], out[1], out[2])
+    @staticmethod
+    def find_by_email(email):
+        cursor = get_db().cursor()
+        user_data = cursor.execute(FIND_BY_EMAIL, (email,)).fetchone()
+        cursor.close()
+        if user_data:
+            return User(user_data)
+        else:
+            return None
+
+    @staticmethod
+    def register(name, email, clearpass):
+        """
+        Attempts to register a user with the given name, email, and passsword.
+        Throws an `Exception` if a user with that email already exists.
+        """
+        if User.find_by_email(email):
+            raise Exception("A user with that email already exists.")
+
+        hashed_pass = generate_password_hash(clearpass)
+        cursor = get_db().cursor()
+        cursor.execute(REGISTER, (name, email, hashed_pass))
+        inserted_id = cursor.lastrowid
+        cursor.close()
+        return User({ "id": inserted_id, "name": name, "email": email, "password": "" })
+
+    @staticmethod
+    def login(email, clearpass):
+        """
+        Attempts to authenticate as a user with given email and password.
+        Returns the `User` object if the password is correct.
+        Throws an `Exception` for invalid email or invalid password.
+        The difference between the two should be kept secret from the user, however.
+        """
+        user = User.find_by_email(email)
+        if not user:
+            raise Exception("Invalid email %s" % email)
+        if not check_password_hash(user.password, clearpass):
+            raise Exception("Invalid password for %s" % email)
+        return user
