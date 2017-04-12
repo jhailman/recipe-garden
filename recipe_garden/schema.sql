@@ -95,10 +95,10 @@ INSERT INTO ingredient VALUES
 ("olive oil"), ("vegetable broth"), ("chard"), ("canned corn"),
 ("garlic"), ("salt"), ("pepper"), ("dried parsley"),
 ("dried oregano"), ("bay leaf"), ("avocado(s)"), ("lime"),("fresh cilantro"),
-("roma tomato(es)"), ("cayenne");
+("roma tomato(es)"), ("cayenne"), ("bread");
 
 INSERT INTO recipe (name, author_id) VALUES
-("Potato Soup", 1), ("Guacamole", 1);
+("Potato Soup", 1), ("Guacamole", 1), ("Toast", 1);
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "onion(s)", "1"), (1, "potato(s)", "5"), (1, "carrot(s)", "1"),
@@ -109,7 +109,7 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "dried oregano", "1 tbsp"), (1, "bay leaf", "1"),
 (2, "avocado(s)", "3"), (2, "lime", "1"), (2, "salt", "1 tsp"),
 (2, "onion(s)", "1/2 cup"), (2, "fresh cilantro", "3 tbsp"),
-(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch");
+(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice");
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient) VALUES
 (1, "canned corn");
@@ -128,4 +128,7 @@ INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (2, "Dice the tomatoes and the onion, mince the garlic and juice the lime", 1),
 (2, "In a medium bowl, mash together the avocados, lime juice and salt", 2),
 (2, "Mix in onion, cilantro, tomatoes, and garlic and cayenne", 3),
-(2, "Refrigerate 1 hour for best flavor, or serve immediately.", 4);
+(2, "Refrigerate 1 hour for best flavor, or serve immediately.", 4),
+(3, "Put bread in toaster until it reaches your preffered toast color", 1),
+(3, "(optional) while toast is still hot, add butter or jam", 2),
+(3, "Eat immediately", 3);
