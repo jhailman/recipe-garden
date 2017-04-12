@@ -78,8 +78,16 @@ CREATE TABLE favorites
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
+<<<<<<< HEAD
 INSERT INTO user (name, password, email) VALUES (
     "footastic95", "footastic95", "foo@foo.com"
+=======
+-- Example data
+
+INSERT INTO user (name, email, password) VALUES (
+    "Mr. Foo Bar", "foo@foo.com",
+    'pbkdf2:sha256:50000$jjb4u67b$6e3256db2e7d7f1e81aafa136e972934cb32a27014e53a2c17b0fd2d3f5a1f29'
+>>>>>>> a882bb2486145265581e20d995621ec559393dac
 );
 
 INSERT INTO ingredient VALUES
