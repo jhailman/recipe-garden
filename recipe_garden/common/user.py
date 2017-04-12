@@ -2,9 +2,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from ..recipe_garden import get_db
 
 GET_BY_ID = "SELECT * FROM user WHERE id = ?"
+
 FIND_BY_EMAIL = "SELECT * FROM user WHERE email = ?"
 FIND_BY_NAME = "SELECT * FROM user WHERE name = ?"
 REGISTER = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)"
+
+GET_RECIPES = "SELECT * FROM recipe WHERE user_id = ?"
+GET_FAVORITES = "SELECT * FROM favorite WHERE user_id = ?"
+GET_SHOPPING_LISTS = "SELECT * FROM shopping_list WHERE user_id = ?"
 
 class User:
     """User representation in DB and static methods for access"""
@@ -13,6 +18,10 @@ class User:
         self.name = row['name']
         self.email = row['email']
         self.password = row['password']
+        # Cached fields
+        self.recipes = None
+        self.favorites = None
+        self.shopping_lists = None
 
     def __repr__(self):
         return '<User %r (%r)>' % (self.name, self.email)
@@ -68,3 +77,12 @@ class User:
         if not check_password_hash(user.password, clearpass):
             raise Exception("Invalid password for %s" % email)
         return user
+
+    def get_recipes(self):
+        pass
+
+    def get_favorites(self):
+        pass
+
+    def get_shopping_lists(self):
+        pass
