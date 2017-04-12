@@ -11,6 +11,7 @@ from flask_restful import Api
 
 app = Flask(__name__) # create the application instance
 app.config.from_object(__name__) # load the values set above into config
+app.secret_key = "super secret key"
 app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with env var
 #api = Api(app) # Create REST API
 
@@ -91,5 +92,45 @@ def shutdown_db(error):
 
 @app.route('/')
 def main_page():
-    user = User.get_by_id(1)
-    return render_template("home.html.j2", user=user)
+    if 'email' in session:
+        # TODO: Look for the actual user
+        # user = User(1, session['email'], "foo@foo.com"
+        pass
+    else:
+        user = None
+    return render_template("home.html")
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login_page():
+    if request.method == 'POST':
+        email = request.form['email']
+        clearpass = request.form['password']
+        # TODO: Check credentials
+        user = User.login(email, clearpass)
+        return redirect(url_for('main_page'))
+    else:
+        return render_template("login.html")
+
+@app.route('/registration', methods = ['GET', 'POST'])
+def registration_page():
+    if request.method == 'POST':
+        username = request.form['username']
+        clearpass = request.form['password']
+        email = request.form['email']
+        # TODO: Create new user in database here
+        try:
+            user = User.register(username, email, clearpass)
+            flash('Successfully registered')
+            return redirect(url_for('login_page'))
+        except Exception as err:
+            flash(str(err))
+            return redirect(url_for('registration_page'))
+    else:
+        return render_template("register.html")
+
+if __name__ == "recipe_garden.recipe_garden":
+    try:
+        run_db_schema()
+    except Exception as err:
+        # do nothing
+        pass

@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block body %}
+
+<div class="text-body">
+
+<h1>Log In</h1>
+<form action="{{ url_for('login_page') }}" method='post'>
+  <input type="email" name="email" class="email-field" placeholder="Email"/><br />
+  <input type="password" name="password" class="password-field" placeholder="Password"/><br />
+  <input type="submit" class="login-submit" />
+</form>
+
+</div>
+{% endblock %}
