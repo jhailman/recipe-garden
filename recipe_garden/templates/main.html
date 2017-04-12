@@ -52,10 +52,27 @@
     </nav>
     <!-- END NAVBAR -->
 
-    <div class="banner-img"></div>
+    <div class="banner-img"></div><br />
+
+    <!-- FLASHED MESSAGES -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul class="flashes alert alert-info">
+        {% for message in messages %}
+          <li>
+            {{ message}}
+          </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+    <!-- END FLASHED MESSAGES -->
 
     <!-- BODY -->
+    <div class="text-body">
     {% block body %} {% endblock %}
+    </div>
+    <!-- END BODY -->
   </div>
 
 </body>
