@@ -94,10 +94,11 @@ INSERT INTO ingredient VALUES
 ("onion(s)"), ("potato(s)"), ("carrot(s)"), ("mushroom(s)"),
 ("olive oil"), ("vegetable broth"), ("chard"), ("canned corn"),
 ("garlic"), ("salt"), ("pepper"), ("dried parsley"),
-("dried oregano"), ("bay leaf");
+("dried oregano"), ("bay leaf"), ("avocado(s)"), ("lime"),("fresh cilantro"),
+("roma tomato(es)"), ("cayenne");
 
 INSERT INTO recipe (name, author_id) VALUES
-("Potato Soup", 1);
+("Potato Soup", 1), ("Guacamole", 1);
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "onion(s)", "1"), (1, "potato(s)", "5"), (1, "carrot(s)", "1"),
@@ -105,7 +106,10 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "vegetable broth", "6 cups"), (1, "chard", "1 bunch"),
 (1, "garlic", "4 cloves"), (1, "salt", "1 tbsp"),
 (1, "pepper", "1 tsp"), (1, "dried parsley", "1 tbsp"),
-(1, "dried oregano", "1 tbsp"), (1, "bay leaf", "1");
+(1, "dried oregano", "1 tbsp"), (1, "bay leaf", "1"),
+(2, "avocado(s)", "3"), (2, "lime", "1"), (2, "salt", "1 tsp"),
+(2, "onion(s)", "1/2 cup"), (2, "fresh cilantro", "3 tbsp"),
+(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch");
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient) VALUES
 (1, "canned corn");
@@ -120,4 +124,8 @@ INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (1, "Turn heat off and use an immersion blender to make the soup a smooth-thick consistency", 7),
 (1, "Heat some olive oil in a pan on medium heat", 8),
 (1, "Add chard to pan and sautee until wilted", 9),
-(1, "Assemble by adding soup to a bowl and topping with the canned corn and sauteed chard", 10);
+(1, "Assemble by adding soup to a bowl and topping with the canned corn and sauteed chard", 10),
+(2, "Dice the tomatoes and the onion, mince the garlic and juice the lime", 1),
+(2, "In a medium bowl, mash together the avocados, lime juice and salt", 2),
+(2, "Mix in onion, cilantro, tomatoes, and garlic and cayenne", 3),
+(2, "Refrigerate 1 hour for best flavor, or serve immediately.", 4);
