@@ -10,7 +10,7 @@ REGISTER = text("INSERT INTO user (name, email, password) VALUES (:name, :email,
 
 GET_RECIPES = text("SELECT * FROM recipe WHERE user_id = :user_id")
 GET_FAVORITES = text("SELECT * FROM favorite WHERE user_id = :user_id")
-GET_SHOPPING_LISTS = text("SELECT * FROM shopping_list WHERE user_id = :user_id")
+GET_SHOPPING_LIST = text("SELECT * FROM shopping_list WHERE user_id = :user_id")
 
 class User:
     """User representation in DB and static methods for access"""
@@ -22,7 +22,7 @@ class User:
         # Cached fields
         self.recipes = None
         self.favorites = None
-        self.shopping_lists = None
+        self.shopping_list = None
 
     def __repr__(self):
         return '<User %r (%r)>' % (self.name, self.email)
@@ -30,8 +30,7 @@ class User:
     @staticmethod
     def get_by_id(id_):
         """Gets a user with the given ID"""
-        db = get_db()
-        user_data = db.execute(GET_BY_ID, id=id_ ).fetchone()
+        user_data = get_db().execute(GET_BY_ID, id=id_ ).fetchone()
         if user_data:
             return User(user_data)
         else:
@@ -39,8 +38,7 @@ class User:
 
     @staticmethod
     def find_by_email(email):
-        db = get_db()
-        user_data = cursor.execute(FIND_BY_EMAIL, email= email).fetchone()
+        user_data = get_db().execute(FIND_BY_EMAIL, email= email).fetchone()
         if user_data:
             return User(user_data)
         else:
@@ -77,10 +75,19 @@ class User:
         return user
 
     def get_recipes(self):
-        pass
+        """Gets the recipes created by the user"""
+        if not self.recipes:
+            self.recipes = get_db().execute(GET_RECIPES, user_id=self.id).findall()
+        return self.recipes
 
     def get_favorites(self):
-        pass
+        """Gets the user's favorite recipes"""
+        if not self.favorites:
+            self.favorites = get_db().execute(GET_FAVORITES, user_id=self.id).findall()
+        return self.favorites
 
-    def get_shopping_lists(self):
-        pass
+    def get_shopping_list(self):
+        """Gets the user's shopping list"""
+        if not self.shopping_list:
+            self.shopping_list = get_db().execute(GET_SHOPPING_LIST, user_id=self.id).findall()
+        return self.shopping_list
