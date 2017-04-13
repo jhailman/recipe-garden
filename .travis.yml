@@ -1,0 +1,16 @@
+sudo: false
+language: python
+python: 3.6
+
+services:
+  - mysql
+
+install:
+  - pip install --editable .
+
+script:
+  - pytest
+
+notifications:
+    # Why the hell isn't this the default
+    email: false
