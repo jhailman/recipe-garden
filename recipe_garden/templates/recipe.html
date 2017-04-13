@@ -1,0 +1,46 @@
+{% extends "main.html" %}
+{% block body %}
+
+<div class="text-body">
+  <h1>{{ recipe.name }}</h1>
+  <h4>Author: {{ recipe.author }}</h4>
+
+  <!-- INGREDIENTS -->
+  <h4>Ingredients:</h4>
+  <ul class="ingredients">
+    {% for ingredient in recipe.ingredients %}
+    <li>{{ ingredient.amount }} {{ ingredient.name }}</li>
+    {% endfor %}
+  </ul>
+  <!-- END INGREDIENTS -->
+
+  <!-- DIRECTIONS -->
+  <h4>Directions:</h4>
+  <ul class="directions">
+    {% for direction in recipe.directions %}
+    <li>{{ direction }}</li>
+    {% endfor %}
+  </ul>
+  <!-- END DIRECTIONS -->
+
+  <!-- TODO: Placeholder -->
+  <!-- <h1>Recipe Name</h1>
+  <h4>Author: Eliza</h4>
+
+  <h4>Ingredients:</h4>
+  <ul class="ingredients">
+    <li>Potato</li>
+    <li>Salt</li>
+    <li>Microwave</li>
+  </ul>
+
+  <h4>Directions:</h4>
+  <ol class="directions">
+    <li>Select potato</li>
+    <li>Put potato in bowl</li>
+    <li>Microwave for ~8 min</li>
+    <li>Optional: lightly salt</li>
+  </ol> -->
+</div>
+
+{% endblock %}

@@ -30,8 +30,8 @@ def create_db_engine():
         app.logger.info("Got a URL")
         if not url:
             app.logger.info("There is no URL")
-            user = os.environ['RECIPE_GARDEN_MYSQL_USER'] or 'root'
-            password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] or 'root'
+            user = os.environ['RECIPE_GARDEN_MYSQL_USER'] if 'RECIPE_GARDEN_MYSQL_USER' in os.environ else 'root'
+            password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] if 'RECIPE_GARDEN_MYSQL_PASS' in os.environ else 'root'
             url = "mysql+pymysql://{user}:{password}@localhost/".format(
                 user=user, password=password)
         app.logger.info("Creating engine with url %s", url)
@@ -70,6 +70,7 @@ def get_db():
 
 # Import stuff from common after creating `app` and `get_db`
 from .common.user import User
+from .common.recipe import Recipe
 
 # Set up database
 @app.cli.command('initdb')
@@ -92,24 +93,32 @@ def shutdown_db(error):
 
 @app.route('/')
 def main_page():
-    if 'email' in session:
-        # TODO: Look for the actual user
-        # user = User(1, session['email'], "foo@foo.com"
-        pass
-    else:
-        user = None
     return render_template("home.html")
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login_page():
     if request.method == 'POST':
-        email = request.form['email']
-        clearpass = request.form['password']
-        # TODO: Check credentials
-        user = User.login(email, clearpass)
-        return redirect(url_for('main_page'))
+        try:
+            email = request.form['email']
+            clearpass = request.form['password']
+
+            # Check credentials
+            user = User.login(email, clearpass)
+            session['username'] = user.name
+            flash('Successfully logged in')
+            return redirect(url_for('main_page'))
+        except Exception as err:
+            flash(str(err))
+            return render_template("login.html")
     else:
         return render_template("login.html")
+
+@app.route('/logout')
+def logout_page():
+    if 'username' in session:
+        session.pop('username', None)
+        flash('Successfully logged out')
+        return redirect(url_for('main_page'))
 
 @app.route('/registration', methods = ['GET', 'POST'])
 def registration_page():
@@ -117,7 +126,8 @@ def registration_page():
         username = request.form['username']
         clearpass = request.form['password']
         email = request.form['email']
-        # TODO: Create new user in database here
+
+        # Create new user in database here
         try:
             user = User.register(username, email, clearpass)
             flash('Successfully registered')
@@ -128,9 +138,23 @@ def registration_page():
     else:
         return render_template("register.html")
 
-if __name__ == "recipe_garden.recipe_garden":
-    try:
-        run_db_schema()
-    except Exception as err:
-        # do nothing
-        pass
+@app.route('/browse')
+def browse_page():
+    return render_template('browse.html')
+
+@app.route('/new-recipe', methods = ['GET', 'POST'])
+def new_recipe_page():
+    if 'username' in session:
+        return render_template('new-recipe.html')
+    else:
+        return redirect(url_for('main_page'))
+
+@app.route('/recipe/<recipe_id>')
+def recipe_page(recipe_id=None):
+    # TODO: Implement Recipe database functions
+    recipe = Recipe.get_by_id(recipe_id)
+    if recipe == None:
+        flash("Recipe not found")
+        return redirect(url_for('main_page'))
+
+    return render_template('recipe.html', recipe=recipe)

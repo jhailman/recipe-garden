@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block body %}
+
+<div class="text-body">
+  <h1>Add a new recipe</h1>
+  <form action"{{ url_for('new_recipe_page') }}" method="post">
+    <input type="text" name="recipe-name" placeholder="Recipe name"/><br />
+    <input type="text" name="recipe-ingredients" placeholder="Ingredients (e.g. '3 potatoes, 1 cup broccoli')"/><br />
+    <input type="text" name="recipe-directions" placeholder="Directions"/><br />
+    <input type="submit" />
+  </form>
+</div>
+
+{% endblock %}
