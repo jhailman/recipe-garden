@@ -3,13 +3,13 @@
 
 <div class="text-body">
   <h1>{{ recipe.name }}</h1>
-  <h4>Author: {{ recipe.author }}</h4>
+  <h4>Author: {{ recipe.get_author().name }}</h4>
 
   <!-- INGREDIENTS -->
   <h4>Ingredients:</h4>
   <ul class="ingredients">
-    {% for ingredient in recipe.ingredients %}
-    <li>{{ ingredient.amount }} {{ ingredient.name }}</li>
+    {% for ingredient in recipe.get_ingredients() %}
+    <li>{{ ingredient.amount }} {{ ingredient.ingredient }}</li>
     {% endfor %}
   </ul>
   <!-- END INGREDIENTS -->
@@ -17,7 +17,7 @@
   <!-- DIRECTIONS -->
   <h4>Directions:</h4>
   <ul class="directions">
-    {% for direction in recipe.directions %}
+    {% for direction in recipe.get_directions() %}
     <li>{{ direction }}</li>
     {% endfor %}
   </ul>

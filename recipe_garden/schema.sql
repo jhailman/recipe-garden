@@ -78,6 +78,9 @@ CREATE TABLE favorites
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
+INSERT INTO user (id, name, password, email) VALUES
+(1, "Ratatouille", "pbkdf2:sha256:50000$jjb4u67b$6e3256db2e7d7f1e81aafa136e972934cb32a27014e53a2c17b0fd2d3f5a1f29", "email@example.com");
+
 INSERT INTO ingredient VALUES
 ("onion(s)"), ("potato(s)"), ("carrot(s)"), ("mushroom(s)"),
 ("olive oil"), ("vegetable broth"), ("chard"), ("canned corn"),

@@ -28,24 +28,30 @@ class Recipe:
     @staticmethod
     def get_by_id(recipe_id):
         """Gets a recipe with the corresponding ID"""
-        return get_db().execute(GET_BY_ID, id=recipe_id).fetchone()
+        return Recipe(get_db().execute(GET_BY_ID, id=recipe_id).fetchone())
 
     @staticmethod
     def search_by_name(name):
         """Searches for recipes which are similar to the name"""
         # TODO turn into %stuff% regex safely
-        return get_db().execute(SEARCH_BY_NAME, name=name)
+        return Recipe(get_db().execute(SEARCH_BY_NAME, name=name))
 
-    def get_steps(self):
+    def get_directions(self):
         """Gets the steps of the recipe"""
+        from .direction import Direction
         if not self.steps:
-            self.steps = get_db().execute(GET_STEPS, id=self.id).findmany()
+            self.steps = map(
+                lambda step: Direction(step),
+                get_db().execute(GET_STEPS, id=self.id).fetchall())
         return self.steps
 
-    def list_ingredients(self):
+    def get_ingredients(self):
         """Gets all of the ingredients of the recipe"""
+        from .ingredient import RecipeIngredient
         if not self.ingredients:
-            self.ingredients = get_db().execute(GET_INGREDIENTS, id=self.id).findmany()
+            self.ingredients = map(
+                lambda ingredient: RecipeIngredient(ingredient),
+                get_db().execute(GET_INGREDIENTS, id=self.id).fetchall())
         return self.ingredients
 
     def get_shopping_list(self):
