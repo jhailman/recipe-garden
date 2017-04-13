@@ -105,9 +105,9 @@ def login_page():
     if request.method == 'POST':
         email = request.form['email']
         clearpass = request.form['password']
-        # TODO: Check credentials
-        # user = User.login(email, clearpass)
-        user = User({ "id": 1, "name": "ari", "email": "ari@test.com", "password": "asdf" })
+        # Check credentials
+        user = User.login(email, clearpass)
+        # user = User({ "id": 1, "name": "ari", "email": "ari@test.com", "password": "asdf" })
         session['username'] = user.name
         flash('Successfully logged in')
         return redirect(url_for('main_page'))
@@ -127,7 +127,8 @@ def registration_page():
         username = request.form['username']
         clearpass = request.form['password']
         email = request.form['email']
-        # TODO: Create new user in database here
+
+        # Create new user in database here
         try:
             user = User.register(username, email, clearpass)
             flash('Successfully registered')
@@ -161,11 +162,3 @@ def recipe_page(recipe_id=None):
 
     # TODO: Temporary
     return render_template('recipe.html', recipe="test")
-
-
-if __name__ == "recipe_garden.recipe_garden":
-    try:
-        run_db_schema()
-    except Exception as err:
-        # do nothing
-        pass
