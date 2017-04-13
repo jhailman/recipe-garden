@@ -92,6 +92,13 @@ def registration_page():
 def browse_page():
     return render_template('browse.html')
 
+@app.route('/new-recipe', methods = ['GET', 'POST'])
+def new_recipe_page():
+    if 'username' in session:
+        return render_template('new-recipe.html')
+    else:
+        return redirect(url_for('main_page'))
+
 @app.route('/recipe/<recipe_id>')
 def recipe_page(recipe_id=None):
     # TODO: Implement Recipe database functions
