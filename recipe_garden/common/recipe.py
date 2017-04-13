@@ -28,7 +28,7 @@ class Recipe:
     @staticmethod
     def get_by_id(recipe_id):
         """Gets a recipe with the corresponding ID"""
-        return get_db().execute(GET_BY_ID, id=self.id).findone()
+        return get_db().execute(GET_BY_ID, id=recipe_id).fetchone()
 
     @staticmethod
     def search_by_name(name):
