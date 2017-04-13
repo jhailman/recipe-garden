@@ -92,7 +92,7 @@ def shutdown_db(error):
 
 @app.route('/')
 def main_page():
-    if 'email' in session:
+    if 'username' in session:
         # TODO: Look for the actual user
         # user = User(1, session['email'], "foo@foo.com"
         pass
@@ -105,11 +105,21 @@ def login_page():
     if request.method == 'POST':
         email = request.form['email']
         clearpass = request.form['password']
-        # TODO: Check credentials
+        # Check credentials
         user = User.login(email, clearpass)
+        # user = User({ "id": 1, "name": "ari", "email": "ari@test.com", "password": "asdf" })
+        session['username'] = user.name
+        flash('Successfully logged in')
         return redirect(url_for('main_page'))
     else:
         return render_template("login.html")
+
+@app.route('/logout')
+def logout_page():
+    if 'username' in session:
+        session.pop('username', None)
+        flash('Successfully logged out')
+        return redirect(url_for('main_page'))
 
 @app.route('/registration', methods = ['GET', 'POST'])
 def registration_page():
@@ -117,7 +127,8 @@ def registration_page():
         username = request.form['username']
         clearpass = request.form['password']
         email = request.form['email']
-        # TODO: Create new user in database here
+
+        # Create new user in database here
         try:
             user = User.register(username, email, clearpass)
             flash('Successfully registered')
@@ -128,8 +139,26 @@ def registration_page():
     else:
         return render_template("register.html")
 
-#if __name__ == "recipe_garden.recipe_garden":
-#    try:
-#    except Exception as err:
-        # do nothing
-#        pass
+@app.route('/browse')
+def browse_page():
+    return render_template('browse.html')
+
+@app.route('/new-recipe', methods = ['GET', 'POST'])
+def new_recipe_page():
+    if 'username' in session:
+        return render_template('new-recipe.html')
+    else:
+        return redirect(url_for('main_page'))
+
+@app.route('/recipe/<recipe_id>')
+def recipe_page(recipe_id=None):
+    # TODO: Implement Recipe database functions
+    # try:
+    #     recipe = Recipe.get_by_id(recipe_id)
+    #     render_template('recipe.html', recipe=recipe)
+    # except Exception as err:
+    #     flash(str(err))
+    #     return redirect(url_for('main_page'))
+
+    # TODO: Temporary
+    return render_template('recipe.html', recipe="test")

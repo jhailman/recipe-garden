@@ -1,7 +1,8 @@
 from ..recipe_garden import get_db
+from sqlalchemy import text
 
-CREATE = "INSERT INTO favorites (user_id, recipe_id) VALUES (?, ?)"
-GET_USER = "SELECT * FROM users WHERE id = ?"
+GET_BY_ID = text("SELECT * FROM favorite WHERE id = :id")
+CREATE = text("INSERT INTO favorite (user_id, recipe_id) VALUES (:user_id, :recipe_id)")
 
 class Favorite:
     """Instance of a user favoriting a recipe"""
@@ -12,6 +13,10 @@ class Favorite:
         # Cached lookup fields
         self.recipe = None
         self.user = None
+
+    @staticmethod
+    def get_by_id(id):
+        return get_db().execute(GET_BY_ID, id=id).fetchone()
 
     def get_user(self):
         """Gets the corresponding user of this favorite"""
@@ -30,10 +35,5 @@ class Favorite:
     @staticmethod
     def create(user_id, recipe_id):
         """Create a new favorite"""
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute(CREATE, (user_id, recipe_id))
-        favorite_id = cursor.rowid
-        cursor.close()
-        db.commit()
+        favorite_id = get_db().execute(CREATE, user_id=user_id, recipe_id=recipe_id).rowid
         return Favorite({ "id": favorite_id, "user_id": user_id, "recipe_id": recipe_id })

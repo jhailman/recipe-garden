@@ -55,8 +55,7 @@ class User:
 
         hashed_pass = generate_password_hash(clearpass)
         db = get_db()
-        db.execute(REGISTER, name=name, email=email, password=hashed_pass)
-        inserted_id = db.inserted_primary_key
+        inserted_id = db.execute(REGISTER, name=name, email=email, password=hashed_pass).lastrowid
         return User({ "id": inserted_id, "name": name, "email": email, "password": "" })
 
     @staticmethod
