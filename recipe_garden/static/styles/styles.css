@@ -18,7 +18,6 @@ body
   height: 300px;
   margin-top: -30px;
   /*background-image: url('http://cdn.everything.io/vegankit/images/veggies.jpg');*/
-  background-image: url('http://www.grosvenormarket.com/blog/wp-content/uploads/2015/07/Fruits-And-Vegetables-1080x1920.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -35,6 +34,33 @@ form input
   height: 30px;
   width: 300px;
   margin: 5px 0 5px 0;
+}
+
+img.recipe-img
+{
+  max-height: 50%;
+  max-width: 50%;
+  margin: 0 auto;
+  display: block;
+}
+
+img#clippy
+{
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  max-width: 3%;
+  max-height: 3%;
+}
+
+ol.directions li
+{
+
+}
+
+ul.ingredients li
+{
+
 }
 
 /* FOR GREEN NAVBAR: from work.smarchal.com/twbscolor*/

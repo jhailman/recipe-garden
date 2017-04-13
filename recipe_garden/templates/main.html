@@ -35,11 +35,18 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/browse">Browse <span class="sr-only">(current)</span></a></li>
+            {% if session.username %}
             <li><a href="/favorites">Favorites</a></li>
+            <li><a href="/new-recipe">New Recipe</a></li>
+            {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            {% if session.username %}
+            <li><a href="/logout">Log Out</a></li>
+            {% else %}
             <li><a href="/login">Log In</a></li>
             <li><a href="/registration">Register</a></li>
+            {% endif %}
           </ul>
           <form class="navbar-form navbar-right">
             <div class="form-group">
@@ -52,16 +59,21 @@
     </nav>
     <!-- END NAVBAR -->
 
-    <div class="banner-img"></div><br />
+    <!-- BANNER IMG -->
+    {% if recipe %}
+    <!-- TODO: modify this to take the recipe's img -->
+    <div class="banner-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/ab/Patates.jpg');"></div>
+    {% else %}
+    <div class="banner-img" style="background-image: url('http://www.grosvenormarket.com/blog/wp-content/uploads/2015/07/Fruits-And-Vegetables-1080x1920.jpg');"></div><br />
+    {% endif %}
+    <!-- END BANNER IMG -->
 
     <!-- FLASHED MESSAGES -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-      <ul class="flashes alert alert-info">
+      <ul class="flashes alert alert-info" style="list-style-type: none; max-width: 95%; margin: 0 auto; border-radius: 0;">
         {% for message in messages %}
-          <li>
-            {{ message}}
-          </li>
+          <li>{{ message }}</li>
         {% endfor %}
       </ul>
       {% endif %}
@@ -69,11 +81,11 @@
     <!-- END FLASHED MESSAGES -->
 
     <!-- BODY -->
-    <div class="text-body">
     {% block body %} {% endblock %}
-    </div>
     <!-- END BODY -->
   </div>
 
 </body>
+
+<img id="clippy" src="http://vignette1.wikia.nocookie.net/joke-battles/images/c/cb/Clippy.png/revision/latest?cb=20151209031540"/>
 </html>

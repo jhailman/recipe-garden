@@ -40,7 +40,7 @@ class User:
     @staticmethod
     def find_by_email(email):
         db = get_db()
-        user_data = cursor.execute(FIND_BY_EMAIL, email= email).fetchone()
+        user_data = db.execute(FIND_BY_EMAIL, email= email).fetchone()
         if user_data:
             return User(user_data)
         else:
@@ -57,8 +57,8 @@ class User:
 
         hashed_pass = generate_password_hash(clearpass)
         db = get_db()
-        db.execute(REGISTER, name=name, email=email, password=hashed_pass)
-        inserted_id = db.inserted_primary_key
+        result = db.execute(REGISTER, name=name, email=email, password=hashed_pass)
+        inserted_id = result.lastrowid
         return User({ "id": inserted_id, "name": name, "email": email, "password": "" })
 
     @staticmethod
