@@ -30,8 +30,8 @@ def create_db_engine():
         app.logger.info("Got a URL")
         if not url:
             app.logger.info("There is no URL")
-            user = os.environ['RECIPE_GARDEN_MYSQL_USER'] or 'root'
-            password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] or 'root'
+            user = os.environ['RECIPE_GARDEN_MYSQL_USER'] if 'RECIPE_GARDEN_MYSQL_USER' in os.environ else 'root'
+            password = os.environ['RECIPE_GARDEN_MYSQL_PASS'] if 'RECIPE_GARDEN_MYSQL_PASS' in os.environ else 'root'
             url = "mysql+pymysql://{user}:{password}@localhost/".format(
                 user=user, password=password)
         app.logger.info("Creating engine with url %s", url)
@@ -128,9 +128,8 @@ def registration_page():
     else:
         return render_template("register.html")
 
-if __name__ == "recipe_garden.recipe_garden":
-    try:
-        run_db_schema()
-    except Exception as err:
+#if __name__ == "recipe_garden.recipe_garden":
+#    try:
+#    except Exception as err:
         # do nothing
-        pass
+#        pass
