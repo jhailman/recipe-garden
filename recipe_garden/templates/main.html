@@ -42,18 +42,20 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if session.username %}
+            <!-- <li>Logged in as {{ session.username }}</li> -->
+            <li><a href="#">Logged in as {{ session.username }}</a></li>
             <li><a href="/logout">Log Out</a></li>
             {% else %}
             <li><a href="/login">Log In</a></li>
             <li><a href="/registration">Register</a></li>
             {% endif %}
           </ul>
-          <form class="navbar-form navbar-right">
+          <!-- <form class="navbar-form navbar-right">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search" style="border-radius: 0;">
             </div>
             <button type="submit" class="btn btn-default" style="border-radius: 0;">Submit</button>
-          </form>
+          </form> -->
         </div>
       </div>
     </nav>
@@ -62,7 +64,7 @@
     <!-- BANNER IMG -->
     {% if recipe %}
     <!-- TODO: modify this to take the recipe's img -->
-    <div class="banner-img" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/ab/Patates.jpg');"></div>
+    <div class="banner-img" style="background-image: url('https://c1.staticflickr.com/4/3617/3512658421_cea42ca516_b.jpg');"></div>
     {% else %}
     <div class="banner-img" style="background-image: url('http://www.grosvenormarket.com/blog/wp-content/uploads/2015/07/Fruits-And-Vegetables-1080x1920.jpg');"></div><br />
     {% endif %}

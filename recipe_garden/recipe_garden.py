@@ -70,6 +70,7 @@ def get_db():
 
 # Import stuff from common after creating `app` and `get_db`
 from .common.user import User
+from .common.recipe import Recipe
 
 # Set up database
 @app.cli.command('initdb')
@@ -92,25 +93,23 @@ def shutdown_db(error):
 
 @app.route('/')
 def main_page():
-    if 'username' in session:
-        # TODO: Look for the actual user
-        # user = User(1, session['email'], "foo@foo.com"
-        pass
-    else:
-        user = None
     return render_template("home.html")
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login_page():
     if request.method == 'POST':
-        email = request.form['email']
-        clearpass = request.form['password']
-        # Check credentials
-        user = User.login(email, clearpass)
-        # user = User({ "id": 1, "name": "ari", "email": "ari@test.com", "password": "asdf" })
-        session['username'] = user.name
-        flash('Successfully logged in')
-        return redirect(url_for('main_page'))
+        try:
+            email = request.form['email']
+            clearpass = request.form['password']
+
+            # Check credentials
+            user = User.login(email, clearpass)
+            session['username'] = user.name
+            flash('Successfully logged in')
+            return redirect(url_for('main_page'))
+        except Exception as err:
+            flash(str(err))
+            return render_template("login.html")
     else:
         return render_template("login.html")
 
@@ -153,12 +152,9 @@ def new_recipe_page():
 @app.route('/recipe/<recipe_id>')
 def recipe_page(recipe_id=None):
     # TODO: Implement Recipe database functions
-    # try:
-    #     recipe = Recipe.get_by_id(recipe_id)
-    #     render_template('recipe.html', recipe=recipe)
-    # except Exception as err:
-    #     flash(str(err))
-    #     return redirect(url_for('main_page'))
+    recipe = Recipe.get_by_id(recipe_id)
+    if recipe == None:
+        flash("Recipe not found")
+        return redirect(url_for('main_page'))
 
-    # TODO: Temporary
-    return render_template('recipe.html', recipe="test")
+    return render_template('recipe.html', recipe=recipe)
