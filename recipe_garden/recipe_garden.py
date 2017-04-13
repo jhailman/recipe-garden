@@ -37,24 +37,30 @@ def create_db_engine():
         app.logger.info("Creating engine with url %s", url)
         try:
             engine = create_engine(url) #, encoding = 'UTF-8')
+            app.logger.info("Created engine")
         except Exception as ex:
             app.logger.error(ex)
-        app.logger.info("Created engine")
         try:
             engine.execute("use recipe_schema")
         except Exception as e:
-            app.logger.error(e)
-            app.logger.debug("Could select database recipe_schema, assuming it must be created.")
-            connection = engine.raw_connection()
-            cursor = connection.cursor()
-            with app.open_resource('schema.sql', mode='r') as schema:
+            try:
+                app.logger.error(e)
+                app.logger.debug("Could select database recipe_schema, assuming it must be created.")
+                connection = engine.raw_connection()
+                cursor = connection.cursor()
+                schema = ""
+                with app.open_resource('schema.sql', mode='r') as schema_file:
+                    schema = schema_file.read()
                 app.logger.info("Opened schema")
-                cursor.execute(schema.read())
-            cursor.close()
-            cursor.commit()
-            connection.close()
-            connection.commit()
-            app.logger.info("Created recipe_garden database from schema.")
+                cursor.execute(schema)
+                app.logger.info("Created new database")
+                cursor.close()
+                connection.commit()
+                connection.close()
+                app.logger.info("Created recipe_garden database from schema.")
+            except Exception as e:
+                app.logger.error("Could not create the new database")
+                app.logger.error(e)
         return engine
 
 

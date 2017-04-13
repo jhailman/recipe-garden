@@ -1,27 +1,27 @@
-from ..recipe_garden import get_db
+from ..recipe_garden import get_db, app
 from sqlalchemy import text
 
-GET = text("SELECT * FROM ingredient WHERE name = :name")
-CREATE = text("INSERT INTO ingredient (name) VALUES (:name)")
+GET_BY_ID = text("SELECT * FROM recipe_ingredient WHERE id = :id")
 
-class Ingredient:
+class RecipeIngredient:
     def __init__(self, row):
-        self.name = row['name']
+        app.logger.debug(row)
+        self.id = row['id']
+        self.recipe_id = row['recipe_id']
+        self.ingredient = row['ingredient']
+        self.amount = row['amount']
+
+        self.recipe = None
 
     def __repr__(self):
-        return self.name
-
-    def __str__(self):
-        return self.name
+        return "%s %s" % (self.amount, self.ingredient)
 
     @staticmethod
-    def get_or_create(name):
-        """Creates an ingredient if it does not exist"""
-        name_lower = name.lower()
-        db = get_db()
-        prior = db.execute(GET, name=name_lower).fetchone()
-        if prior == None:
-            db.execute(CREATE, name=name_lower)
-            return Ingredient(name_lower)
-        else:
-            return Ingredient(prior['name'])
+    def get_by_id(id):
+        return RecipeIngredient(get_db().execute(GET_BY_ID, id=id).fetchone())
+
+    def get_recipe(self):
+        from .recipe import Recipe
+        if not self.recipe:
+            self.recipe = Recipe.get_by_id(self.recipe_id)
+        return self.recipe

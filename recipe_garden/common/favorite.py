@@ -16,7 +16,7 @@ class Favorite:
 
     @staticmethod
     def get_by_id(id):
-        return get_db().execute(GET_BY_ID, id=id).fetchone()
+        return Favorite(get_db().execute(GET_BY_ID, id=id).fetchone())
 
     def get_user(self):
         """Gets the corresponding user of this favorite"""
