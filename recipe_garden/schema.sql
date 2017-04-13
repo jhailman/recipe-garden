@@ -129,6 +129,6 @@ INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (2, "In a medium bowl, mash together the avocados, lime juice and salt", 2),
 (2, "Mix in onion, cilantro, tomatoes, and garlic and cayenne", 3),
 (2, "Refrigerate 1 hour for best flavor, or serve immediately.", 4),
-(3, "Put bread in toaster until it reaches your preffered toast color", 1),
+(3, "Put bread in toaster until it reaches your preferred toast color", 1),
 (3, "(optional) while toast is still hot, add butter or jam", 2),
 (3, "Eat immediately", 3);
