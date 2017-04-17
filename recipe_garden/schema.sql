@@ -108,7 +108,13 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (2, "avocado(s)", "3"), (2, "lime", "1"), (2, "salt", "1 tsp"),
 (2, "onion(s)", "1/2 cup"), (2, "fresh cilantro", "3 tbsp"),
 (2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice"),
-(1, "canned corn", "1");
+(4, "sugar", "1 cup"), (4, "butter", "1/2 cup"), (4, "egg(s)", "2"),
+(4, "vanilla extract", "2 tsp"), (4, "flour", "1 1/2 cups"),
+(4, "baking powder", "1 3/4 tsp"), (4, "milk", "1/2 cup"), (5, "linguine", "12 oz"),
+(5, "cherry tomato(es)", "12 oz"), (5, "onion(s)", "1"), (5, "garlic", "4 cloves"),
+(5, "red pepper flakes", "1/2 tsp"), (5, "basil", "2 sprigs"),
+(5, "olive oil", "2 tbs"), (5, "water", "4 1/2 cups"), (5, "salt", "2 tsp"),
+(5, "pepper", "1/4 tsp"), (1, "canned corn", "1");
 
 INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (1, "Cut all veggies and mince the garlic", 1),
