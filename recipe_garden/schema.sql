@@ -62,9 +62,9 @@ CREATE TABLE shopping_list
 (
   id              INTEGER AUTO_INCREMENT,
   user_id         INT(11)   NOT NULL,
-  recipe_ingredient_id  INT(11) NOT NULL,
+  recipe_id       INT(11) NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (recipe_ingredient_id) REFERENCES recipe_ingredient(id),
+  FOREIGN KEY (recipe_id) REFERENCES recipe(id),
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
@@ -123,3 +123,9 @@ INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (3, "Put bread in toaster until it reaches your preferred toast color", 1),
 (3, "(optional) while toast is still hot, add butter or jam", 2),
 (3, "Eat immediately", 3);
+
+INSERT INTO shopping_list (user_id, recipe_id) VALUES
+(1, 1), (1, 3);
+
+INSERT INTO favorites VALUES
+(1, 3);
