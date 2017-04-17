@@ -1,6 +1,7 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import text
 from ..recipe_garden import get_db
+from recipe import Recipe
 
 GET_BY_ID = text("SELECT * FROM user WHERE id = :id")
 
@@ -9,8 +10,11 @@ FIND_BY_NAME = text("SELECT * FROM user WHERE name = :name")
 REGISTER = text("INSERT INTO user (name, email, password) VALUES (:name, :email, :password)")
 
 GET_RECIPES = text("SELECT * FROM recipe WHERE user_id = :user_id")
-GET_FAVORITES = text("SELECT * FROM favorite WHERE user_id = :user_id")
+GET_FAVORITES = text("SELECT * FROM favorites WHERE user_id = :user_id")
 GET_SHOPPING_LIST = text("SELECT * FROM shopping_list WHERE user_id = :user_id")
+
+INSERT_FAVORITE = text("INSERT INTO favorites (user_id, recipe_id) VALUES (:uid, :rid)")
+DELETE_FAVORITE = text("DELETE FROM favorites WHERE recipe_id = :recipe_id")
 
 class User:
     """User representation in DB and static methods for access"""
@@ -26,6 +30,9 @@ class User:
 
     def __repr__(self):
         return '<User %r (%r)>' % (self.name, self.email)
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     @staticmethod
     def get_by_id(id_):
@@ -76,17 +83,35 @@ class User:
     def get_recipes(self):
         """Gets the recipes created by the user"""
         if not self.recipes:
-            self.recipes = get_db().execute(GET_RECIPES, user_id=self.id).findall()
+            self.recipes = get_db().execute(GET_RECIPES, user_id=self.id).fetchall()
         return self.recipes
 
     def get_favorites(self):
         """Gets the user's favorite recipes"""
         if not self.favorites:
-            self.favorites = get_db().execute(GET_FAVORITES, user_id=self.id).findall()
+            self.favorites = []
+            all_rows = get_db().execute(GET_FAVORITES, user_id=self.id).fetchall()
+            for row in all_rows:
+                self.favorites.append(Recipe.get_by_id(row['recipe_id']))
         return self.favorites
+
+    def add_favorite(self, recipe_id):
+        """Adds a recipe to a user's favorite recipes"""
+        if not self.favorites:
+            self.favorites = [Recipe.get_by_id(recipe_id)]
+        else:
+            self.favorites.append(recipe_id)
+
+        get_db().execute(INSERT_FAVORITE, uid=self.id, rid=recipe_id)
+
+    def remove_favorite(self, recipe_id):
+        """Removes a recipe from a user's favorite recipes"""
+        self.get_favorites()
+        self.favorites.remove(Recipe.get_by_id(recipe_id))
+        get_db().execute(DELETE_FAVORITE, recipe_id=recipe_id)
 
     def get_shopping_list(self):
         """Gets the user's shopping list"""
         if not self.shopping_list:
-            self.shopping_list = get_db().execute(GET_SHOPPING_LIST, user_id=self.id).findall()
+            self.shopping_list = get_db().execute(GET_SHOPPING_LIST, user_id=self.id).fetchall()
         return self.shopping_list

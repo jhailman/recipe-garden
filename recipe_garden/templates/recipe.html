@@ -24,6 +24,20 @@
   </ol>
   <!-- END DIRECTIONS -->
 
+  <!-- FAVORITE -->
+  {% if user %}
+    {% if recipe in user.get_favorites() %}
+      <form action="{{ url_for('recipe_page', recipe_id=recipe.id) }}" method="post">
+        <input type="submit" name="rm-fav" class="fav-btn" value="Remove from favorites"/>
+      </form>
+    {% else %}
+      <form action="{{ url_for('recipe_page', recipe_id=recipe.id) }}" method="post">
+        <input type="submit" name="add-fav" class="fav-btn" value="Add to favorites" />
+      </form>
+    {% endif %}
+  {% endif %}
+  <!-- END FAVORITE -->
+
 </div>
 
 {% endblock %}

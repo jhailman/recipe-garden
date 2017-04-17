@@ -1,21 +1,18 @@
-{% extends "main.html"}
+{% extends "main.html" %}
 {% block body %}
 
 <div class="text-body">
-    {% if session.user %}
-    <h1>{{ user.name }} - favorites</h1>
+    <h1>Favorites</h1>
 
-    {% if len(session.favorites) == 0 %}
-    <h4>No favorites</h4>
+    {% if user.get_favorites()|length == 0 %}
+      <h4>You have no favorites! <a href="/browse">Browse recipes?</a></h4>
     {% else %}
-    {% for favorite in user.favorites %}
-    <a class="favorite-link" href="{{ url_for('recipe/' + favorite.recipe_id) }}">
-        {{ favorite.get_recipe().name }}
-    </a>
-    {% endif %}
-
-    {% else %}
-    <h1>Please log in to see favorites.</h1>
-    <!-- Redirect button -->
+      {% for recipe in user.get_favorites() %}
+      <a class="favorite-link" href="{{ '/recipe/%s' % recipe.id }}">
+          {{ recipe.name }}
+      </a><br />
+      {% endfor %}
     {% endif %}
 </div>
+
+{% endblock %}

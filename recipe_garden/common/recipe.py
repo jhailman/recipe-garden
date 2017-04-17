@@ -20,6 +20,9 @@ class Recipe:
         self.steps = None
         self.ingredients = None
 
+    def __eq__(self, other):
+        return self.id == other.id
+
     def get_author(self):
         """Gets the corresponding author of this recipe"""
         from .user import User
@@ -53,7 +56,7 @@ class Recipe:
 
     @staticmethod
     def create(name, author, image_path, directions, ingredients):
-        
+
         pass
 
     def get_directions(self):
