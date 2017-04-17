@@ -86,10 +86,13 @@ INSERT INTO ingredient VALUES
 ("olive oil"), ("vegetable broth"), ("chard"), ("canned corn"),
 ("garlic"), ("salt"), ("pepper"), ("dried parsley"),
 ("dried oregano"), ("bay leaf"), ("avocado(s)"), ("lime"),("fresh cilantro"),
-("roma tomato(es)"), ("cayenne"), ("bread");
+("roma tomato(es)"), ("cayenne"), ("bread"), ("sugar"), ("butter"), ("egg(s)"),
+("vanilla extract"), ("flour"), ("baking powder"), ("milk"), ("linguine"),
+("cherry tomato(es)"), ("red pepper flakes"), ("basil"), ("water");
 
 INSERT INTO recipe (name, author_id) VALUES
-("Potato Soup", 1), ("Guacamole", 1), ("Toast", 1);
+("Potato Soup", 1), ("Guacamole", 1), ("Toast", 1), ("Easy Vanilla Cake", 1),
+("One-Pot Pasta", 1);
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "onion(s)", "1"), (1, "potato(s)", "5"), (1, "carrot(s)", "1"),
@@ -100,7 +103,14 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "dried oregano", "1 tbsp"), (1, "bay leaf", "1"),
 (2, "avocado(s)", "3"), (2, "lime", "1"), (2, "salt", "1 tsp"),
 (2, "onion(s)", "1/2 cup"), (2, "fresh cilantro", "3 tbsp"),
-(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice");
+(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice"),
+(4, "sugar", "1 cup"), (4, "butter", "1/2 cup"), (4, "egg(s)", "2"),
+(4, "vanilla extract", "2 tsp"), (4, "flour", "1 1/2 cups"),
+(4, "baking powder", "1 3/4 tsp"), (4, "milk", "1/2 cup"), (5, "linguine", "12 oz"),
+(5, "cherry tomato(es)", "12 oz"), (5, "onion(s)", "1"), (5, "garlic", "4 cloves"),
+(5, "red pepper flakes", "1/2 tsp"), (5, "basil", "2 sprigs"),
+(5, "olive oil", "2 tbs"), (5, "water", "4 1/2 cups"), (5, "salt", "2 tsp"),
+(5, "pepper", "1/4 tsp");
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient) VALUES
 (1, "canned corn");
@@ -122,10 +132,22 @@ INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (2, "Refrigerate 1 hour for best flavor, or serve immediately.", 4),
 (3, "Put bread in toaster until it reaches your preferred toast color", 1),
 (3, "(optional) while toast is still hot, add butter or jam", 2),
-(3, "Eat immediately", 3);
+(3, "Eat immediately", 3),
+(4, "Preheat oven to 350 degrees F (175 degrees C).", 1),
+(4, "Grease and flour a 9x9 inch pan or line a muffin pan with paper liners.", 2),
+(4, "In a medium bowl, cream together the sugar and butter.", 3),
+(4, "Beat in the eggs, one at a time, then stir in the vanilla.", 4),
+(4, "Combine flour and baking powder, add to the creamed mixture and mix well.", 5),
+(4, "Finally stir in the milk until batter is smooth.", 6),
+(4, "Pour or spoon batter into the prepared pan and bake for 30 to 40 minutes", 7),
+(4, "Top with your favorite frosting if desired", 8),
+(5, "Half the cherry tomatoes and thinly slice the onion and garlic.", 1),
+(5, "Combine pasta, tomatoes, onion, garlic, red-pepper flakes, basil, oil, salt, pepper, and water in a large straight-sided skillet.", 1),
+(5, "Bring to a boil over high heat. Boil mixture, stirring and turning pasta frequently with tongs, until pasta is al dente and water has nearly evaporated, about 9 minutes.", 2),
+(5, "Season to taste with salt and pepper, divide among 4 bowls, and garnish with basil. Serve with oil.", 3);
 
 INSERT INTO shopping_list (user_id, recipe_id) VALUES
-(1, 1), (1, 3);
+(1, 1), (1, 4);
 
 INSERT INTO favorites VALUES
-(1, 3);
+(1, 3), (1, 5);
