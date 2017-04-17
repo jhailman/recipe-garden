@@ -29,6 +29,7 @@ CREATE TABLE recipe
   id			    INTEGER AUTO_INCREMENT,
   name		  	VARCHAR(45) NOT NULL,
   author_id		INT(11) NOT NULL,
+  image_path  VARCHAR(2048),
   created     TIMESTAMP DEFAULT now() ON UPDATE now(),
   PRIMARY KEY (id),
   FOREIGN KEY (author_id) REFERENCES user(id)
@@ -88,8 +89,10 @@ INSERT INTO ingredient VALUES
 ("dried oregano"), ("bay leaf"), ("avocado(s)"), ("lime"),("fresh cilantro"),
 ("roma tomato(es)"), ("cayenne"), ("bread");
 
-INSERT INTO recipe (name, author_id) VALUES
-("Potato Soup", 1), ("Guacamole", 1), ("Toast", 1);
+INSERT INTO recipe (name, author_id, image_path) VALUES
+("Potato Soup", 1, 'https://i.ytimg.com/vi/GojmNjoTaTg/maxresdefault.jpg'),
+("Guacamole", 1, 'http://kingofwallpapers.com/guacamole/guacamole-001.jpg'),
+("Toast", 1, 'https://c1.staticflickr.com/4/3617/3512658421_cea42ca516_b.jpg');
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "onion(s)", "1"), (1, "potato(s)", "5"), (1, "carrot(s)", "1"),
@@ -100,10 +103,8 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient, amount) VALUES
 (1, "dried oregano", "1 tbsp"), (1, "bay leaf", "1"),
 (2, "avocado(s)", "3"), (2, "lime", "1"), (2, "salt", "1 tsp"),
 (2, "onion(s)", "1/2 cup"), (2, "fresh cilantro", "3 tbsp"),
-(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice");
-
-INSERT INTO recipe_ingredient (recipe_id, ingredient) VALUES
-(1, "canned corn");
+(2, "garlic", "1 tsp"), (2, "cayenne", "1 pinch"), (3, "bread", "1 slice"),
+(1, "canned corn", "1");
 
 INSERT INTO direction (recipe_id, description, ordernum) VALUES
 (1, "Cut all veggies and mince the garlic", 1),

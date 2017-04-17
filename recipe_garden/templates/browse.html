@@ -3,9 +3,17 @@
 
 <div class="text-body">
   <h1>Browse recipes</h1>
-  <a href="/recipe/3" class="thumbnail" style="width: 45%; height: 45%;">
+  {% if recipes %}
+    {% for recipe in recipes %}
+      <a href="/recipe/{{ recipe.id }}" class="thumbnail" style="width: 45%; height: 45%;">
+        <img src="{{ recipe.image_path }}" />
+      </a>
+    {% endfor %}
+  {% endif %}
+
+  <!-- <a href="/recipe/3" class="thumbnail" style="width: 45%; height: 45%;">
     <img src="https://c1.staticflickr.com/4/3617/3512658421_cea42ca516_b.jpg"/>
-  </a>
+  </a> -->
 </div>
 
 {% endblock %}
