@@ -111,6 +111,7 @@ def login_page():
             # Check credentials
             user = User.login(email, clearpass)
             session['username'] = user.name
+            session['email'] = user.email
             flash('Successfully logged in')
             return redirect(url_for('main_page'))
         except Exception as err:
@@ -123,6 +124,7 @@ def login_page():
 def logout_page():
     if 'username' in session:
         session.pop('username', None)
+        session.pop('email', None)
         flash('Successfully logged out')
         return redirect(url_for('main_page'))
 
@@ -146,21 +148,64 @@ def registration_page():
 
 @app.route('/browse')
 def browse_page():
-    return render_template('browse.html')
+    try:
+        recipes = Recipe.get_by_range(0, 20)
+        return render_template('browse.html', recipes=recipes)
+    except exception as err:
+        flash("Error getting recipes")
+        return render_template('browse.html')
+
+@app.route('/favorites')
+def favorites_page():
+    if 'email' in session:
+        u = User.find_by_email(session['email'])
+        # app.logger.debug("GET_FAVORITES RETURNED %s" % type(u.get_favorites()[0]))
+        return render_template('favorite.html', user=u)
+
+    flash('Log in to add favorites')
+    return redirect(url_for('main_page'))
 
 @app.route('/new-recipe', methods = ['GET', 'POST'])
 def new_recipe_page():
-    if 'username' in session:
-        return render_template('new-recipe.html')
-    else:
-        return redirect(url_for('main_page'))
+    if request.method == 'POST':
+        try:
+            # Add new recipe to database
+            recipe_name = request.form['name']
+            Recipe.create(recipe_name, User.find_by_email(session['email']),
+                request.form['img-path'], request.form['directions'],
+                request.form['ingredients'])
 
-@app.route('/recipe/<recipe_id>')
-def recipe_page(recipe_id=None):
-    # TODO: Implement Recipe database functions
+            # Display new recipe's page
+            # new_recipe_id = (Recipe.search_by_name(recipe_name)).id
+            new_recipe_id = 1
+            flash("Recipe successfully created")
+            return redirect(url_for('recipe_page', recipe_id=new_recipe_id))
+        except Exception as err:
+            flash(str(err))
+            return render_template('new-recipe.html')
+    else:
+        if 'username' in session:
+            return render_template('new-recipe.html')
+        else:
+            return redirect(url_for('main_page'))
+
+@app.route('/recipe/<recipe_id>', methods = ['GET', 'POST'])
+def recipe_page(recipe_id=None, current_user=None):
+    if 'email' in session:
+        current_user = User.find_by_email(session['email'])
+
     recipe = Recipe.get_by_id(recipe_id)
-    if recipe == None:
+    if not recipe:
         flash("Recipe not found")
         return redirect(url_for('main_page'))
 
-    return render_template('recipe.html', recipe=recipe)
+    if request.method == 'POST':  # add/remove favorite
+        try:
+            if 'add-fav' in request.form:
+                current_user.add_favorite(recipe_id)
+            elif 'rm-fav' in request.form:
+                current_user.remove_favorite(recipe_id)
+        except Exception as err:
+            flash(str(err))
+
+    return render_template('recipe.html', recipe=recipe, user=current_user)

@@ -18,6 +18,12 @@ class Favorite:
     def get_by_id(id):
         return Favorite(get_db().execute(GET_BY_ID, id=id).fetchone())
 
+    @staticmethod
+    def create(user_id, recipe_id):
+        """Create a new favorite"""
+        favorite_id = get_db().execute(CREATE, user_id=user_id, recipe_id=recipe_id).rowid
+        return Favorite({ "id": favorite_id, "user_id": user_id, "recipe_id": recipe_id })
+
     def get_user(self):
         """Gets the corresponding user of this favorite"""
         from .user import User
@@ -31,9 +37,3 @@ class Favorite:
         if not self.recipe:
             self.recipe = Recipe.get_by_id(self.recipe_id)
         return self.recipe
-
-    @staticmethod
-    def create(user_id, recipe_id):
-        """Create a new favorite"""
-        favorite_id = get_db().execute(CREATE, user_id=user_id, recipe_id=recipe_id).rowid
-        return Favorite({ "id": favorite_id, "user_id": user_id, "recipe_id": recipe_id })
