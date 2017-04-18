@@ -9,7 +9,7 @@ body
   max-width: 80%;
   display: block;
   margin: 0 auto;
-  min-height: 1080px;
+  min-height: 800px;
 }
 
 .banner-img
@@ -17,7 +17,6 @@ body
   width: 100%;
   height: 300px;
   margin-top: -30px;
-  /*background-image: url('http://cdn.everything.io/vegankit/images/veggies.jpg');*/
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -52,106 +51,3 @@ img#clippy
   max-width: 3%;
   max-height: 3%;
 }
-
-ol.directions li
-{
-
-}
-
-ul.ingredients li
-{
-
-}
-
-/* FOR GREEN NAVBAR: from work.smarchal.com/twbscolor*/
-
-/*.navbar-default {
-  background-color: #c8ffcc;
-  border-color: #7fff8e;
-}
-.navbar-default .navbar-brand {
-  color: #000000;
-}
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-  color: #000000;
-}
-.navbar-default .navbar-text {
-  color: #000000;
-}
-.navbar-default .navbar-nav > li > a {
-  color: #000000;
-}
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-  color: #000000;
-  text-decoration: underline;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu {
-  background-color: #c8ffcc;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a {
-  color: #000000;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
-  color: #000000;
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li > .divider {
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-nav .open .dropdown-menu > .active > a,
-.navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
-.navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-  color: #000000;
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: #000000;
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus {
-  color: #000000;
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-toggle {
-  border-color: #7fff8e;
-}
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
-  background-color: #7fff8e;
-}
-.navbar-default .navbar-toggle .icon-bar {
-  background-color: #000000;
-}
-.navbar-default .navbar-collapse,
-.navbar-default .navbar-form {
-  border-color: #000000;
-}
-.navbar-default .navbar-link {
-  color: #000000;
-}
-.navbar-default .navbar-link:hover {
-  color: #000000;
-}
-
-@media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #000000;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #000000;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #000000;
-    background-color: #7fff8e;
-  }
-}*/

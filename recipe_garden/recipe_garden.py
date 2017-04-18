@@ -147,11 +147,13 @@ def registration_page():
         return render_template("register.html")
 
 @app.route('/browse')
-def browse_page():
+@app.route('/browse/<int:page>')
+def browse_page(page=1):
     try:
-        recipes = Recipe.get_by_range(0, 20)
-        return render_template('browse.html', recipes=recipes)
-    except exception as err:
+        per_page = 20
+        recipes = Recipe.get_by_range((page - 1) * per_page, per_page)
+        return render_template('browse.html', recipes=recipes, page=page)
+    except Exception as err:
         flash("Error getting recipes")
         return render_template('browse.html')
 
