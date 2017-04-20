@@ -1,18 +1,51 @@
 {% extends "main.html" %}
 {% block body %}
 
+<script src="{{ url_for('static', filename='scripts/new-recipe.js') }}"></script>
+
 <div class="text-body">
   <h1>Add a new recipe</h1>
-  <form action"{{ url_for('new_recipe_page') }}" method="post">
-    <h4>Name</h4>
-    <input type="text" name="name" placeholder="Recipe name" style="width: 500px;"/><br />
-    <h4>Ingredients</h4>
-    <textarea name="ingredients" placeholder="Separate ingredients with commas (e.g. '3 potatoes, 3 cups corn, 1 tbsp salt, 6 oz mushrooms')" style="width: 500px; height: 100px;"></textarea>
-    <h4>Directions</h4>
-    <textarea name="directions" placeholder="Separate directions with commas (e.g. 'Cut all veggies and mince the garlic, Add the olive oil to a large pot on medium heat, Sautee the onion until caramelized')" style="width: 500px; height: 100px;"></textarea>
-    <h4>Image Link</h4>
-    <input type="text" name='img-path' placeholder="https://link-to-image.com/image-path" style="width: 500px;"/><br />
-    <input type="submit" style="margin-top: 15px; width: 500px;"/>
+  <form action"{{ url_for('new_recipe_page') }}" method="post" autocomplete="on">
+    <p class="explanation">
+      The name of your recipe, and an optional URL for an image of it.
+    </p>
+    <p>
+      <input name="name" placeholder="{{ session.username }}'s recipe" />
+      <input name="img_path" placeholder="Optional image URL" />
+    </p>
+
+    <h2>Ingredients</h4>
+    <p class="explanation">
+      The ingredients needed to prepare the recipe. These can be added to a shopping cart.
+    </p>
+    <p class="single-ingredient">
+      <label>Quantity</label>
+      <input type="text" name="ingredient_qty" placeholder="i.e. &quot;5 cups&quot;, &quot;one slice&quot;" />
+      <label>Ingredient</label>
+      <input type="text" name="ingredient_name" placeholder="i.e. &quot;flour&quot;" />
+    </p>
+
+    <button type="button" class="add_ingredient" onclick="add_ingredient_handler()">
+      <span>Add ingredient</span>
+    </button>
+
+    <h2>Steps</h4>
+    <p class="explanation">
+      The steps needed to prepare your recipe. Please be specific, and reference the ingredients
+      needed in any step. It's also helpful to include preparation (such as preheating an oven)
+      first.
+    </p>
+    <p class="step">
+      <input type="text" class="step" name="step" placeholder="Preheat oven to 425 degrees..." />
+    </p>
+
+    <button type="button" class="add_step" onclick="add_step_handler()">
+      <span>Add step</span>
+    </button>
+
+    <p>
+      <input type="submit" />
+    </p>
   </form>
 </div>
 
