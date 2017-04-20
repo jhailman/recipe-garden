@@ -17,6 +17,7 @@ app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with en
 
 global DATABASE_SET
 DATABASE_SET = False
+RECIPES_PER_PAGE = 20
 
 def create_db_engine():
     global DATABASE_SET
@@ -150,12 +151,25 @@ def registration_page():
 @app.route('/browse/<int:page>')
 def browse_page(page=1):
     try:
-        per_page = 20
-        recipes = Recipe.get_by_range((page - 1) * per_page, per_page)
+        recipes = Recipe.get_by_range((page - 1) * RECIPES_PER_PAGE, RECIPES_PER_PAGE)
         return render_template('browse.html', recipes=recipes, page=page)
     except Exception as err:
         flash("Error getting recipes")
         return render_template('browse.html')
+
+@app.route('/my-recipes')
+def my_recipes_page():
+    if 'email' not in session:
+        flash('Log in to submit recipes')
+        return redirect(url_for('main_page'))
+
+    try:
+        u = User.find_by_email(session['email'])
+        recipes = Recipe.get_by_author(u.id)
+        return render_template('my-recipes.html', recipes=recipes)
+    except Exception as err:
+        flash(str(err))
+        return render_template('my-recipes.html')
 
 @app.route('/favorites')
 def favorites_page():

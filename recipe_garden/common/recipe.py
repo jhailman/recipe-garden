@@ -6,6 +6,7 @@ SEARCH_BY_NAME = text("SELECT * FROM recipe WHERE name LIKE :name")
 GET_INGREDIENTS = text("SELECT * FROM recipe_ingredient WHERE recipe_id = :id")
 GET_STEPS = text("SELECT * FROM direction WHERE recipe_id = :id")
 GET_RANGE = text("SELECT * FROM recipe ORDER BY created DESC LIMIT :start, :num")
+GET_BY_AUTHOR = text("SELECT * FROM recipe WHERE author_id = :id")
 
 
 class Recipe:
@@ -49,6 +50,14 @@ class Recipe:
     def get_by_range(start, num):
         """Gets a range of recipes, sorted by most recent first"""
         all_rows = get_db().execute(GET_RANGE, start=start, num=num).fetchall()
+        all_recipes = []
+        for row in all_rows:
+            all_recipes.append(Recipe(row))
+        return all_recipes
+
+    @staticmethod
+    def get_by_author(uid):
+        all_rows = get_db().execute(GET_BY_AUTHOR, id=uid).fetchall()
         all_recipes = []
         for row in all_rows:
             all_recipes.append(Recipe(row))
