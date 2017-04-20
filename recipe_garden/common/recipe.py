@@ -58,14 +58,6 @@ class Recipe:
         return all_recipes
 
     @staticmethod
-    def get_by_author(uid):
-        all_rows = get_db().execute(GET_BY_AUTHOR, id=uid).fetchall()
-        all_recipes = []
-        for row in all_rows:
-            all_recipes.append(Recipe(row))
-        return all_recipes
-
-    @staticmethod
     def create(name, author_id, image_path):
         id = get_db().execute(CREATE, author_id=author_id, name=name, image_path=image_path).lastrowid
         return Recipe({ 'id': id, 'author_id': author_id, 'name': name, 'image_path': image_path, 'created': datetime.now() })
