@@ -3,17 +3,70 @@
 
 <div class="text-body">
   <h1>Browse recipes</h1>
+
   {% if recipes %}
-    {% for recipe in recipes %}
-      <a href="/recipe/{{ recipe.id }}" class="thumbnail" style="width: 45%; height: 45%;">
-        <img src="{{ recipe.image_path }}" />
+  <div class="row">
+    <div class="col-sm-6 col-md-4">
+      {% for n in range(recipes|length) %}
+      {% if n % 3 == 0 %}
+      <a href="{{ '/recipe/%s' % recipes[n].id }}">
+        <div class="thumbnail">
+          <img src="{{ recipes[n].image_path }}" />
+          <div class="caption">
+            <h3>{{ recipes[n].name }}</h3>
+          </div>
+        </div>
       </a>
-    {% endfor %}
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="col-sm-6 col-md-4">
+      {% for n in range(recipes|length) %}
+      {% if n % 3 == 1 %}
+      <a href="{{ '/recipe/%s' % recipes[n].id }}">
+        <div class="thumbnail">
+          <img src="{{ recipes[n].image_path }}" />
+          <div class="caption">
+            <h3>{{ recipes[n].name }}</h3>
+          </div>
+        </div>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="col-sm-6 col-md-4">
+      {% for n in range(recipes|length) %}
+      {% if n % 3 == 2 %}
+      <a href="{{ '/recipe/%s' % recipes[n].id }}">
+        <div class="thumbnail">
+          <img src="{{ recipes[n].image_path }}" />
+          <div class="caption">
+            <h3>{{ recipes[n].name }}</h3>
+          </div>
+        </div>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <h4>No more recipes! :(</h4>
   {% endif %}
 
-  <!-- <a href="/recipe/3" class="thumbnail" style="width: 45%; height: 45%;">
-    <img src="https://c1.staticflickr.com/4/3617/3512658421_cea42ca516_b.jpg"/>
-  </a> -->
+  {% if page > 1 %}  <!-- CAN GO BACK -->
+  <h3 class="pg-prev" style="float: left;"><a href="{{ '/browse/%s' % (page - 1) }}">Prev</a></h3>
+  {% else %} <!-- CANNOT GO BACK -->
+  <h3 class="pg-prev" style="float: left;">Prev</h3>
+  {% endif %}
+
+  <!-- {% if recipes|length >= 20 %} CAN GO FORWARD -->
+  <h3 class="pg-next" style="float: right;"><a href="{{ '/browse/%s' % (page + 1) }}">Next</a></h3>
+  <!-- {% else %} -->
+  <h3 class="pg-next" style="float: right;">Next</h3>
+  {% endif %}
+
 </div>
 
 {% endblock %}

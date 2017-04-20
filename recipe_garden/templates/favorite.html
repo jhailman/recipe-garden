@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block body %}
+
+<div class="text-body">
+    <h1>Favorites</h1>
+
+    {% if user.get_favorites()|length == 0 %}
+      <h4>You have no favorites! <a href="/browse">Browse recipes?</a></h4>
+    {% else %}
+      {% for recipe in user.get_favorites() %}
+      <a class="favorite-link" href="{{ '/recipe/%s' % recipe.id }}">
+          {{ recipe.name }}
+      </a><br />
+      {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}

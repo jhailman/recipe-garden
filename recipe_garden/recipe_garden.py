@@ -147,13 +147,25 @@ def registration_page():
         return render_template("register.html")
 
 @app.route('/browse')
-def browse_page():
+@app.route('/browse/<int:page>')
+def browse_page(page=1):
     try:
-        recipes = Recipe.get_by_range(0, 20)
-        return render_template('browse.html', recipes=recipes)
-    except exception as err:
+        per_page = 20
+        recipes = Recipe.get_by_range((page - 1) * per_page, per_page)
+        return render_template('browse.html', recipes=recipes, page=page)
+    except Exception as err:
         flash("Error getting recipes")
         return render_template('browse.html')
+
+@app.route('/favorites')
+def favorites_page():
+    if 'email' in session:
+        u = User.find_by_email(session['email'])
+        # app.logger.debug("GET_FAVORITES RETURNED %s" % type(u.get_favorites()[0]))
+        return render_template('favorite.html', user=u)
+
+    flash('Log in to add favorites')
+    return redirect(url_for('main_page'))
 
 @app.route('/new-recipe', methods = ['GET', 'POST'])
 def new_recipe_page():
@@ -180,11 +192,23 @@ def new_recipe_page():
         else:
             return redirect(url_for('main_page'))
 
-@app.route('/recipe/<recipe_id>')
-def recipe_page(recipe_id=None):
+@app.route('/recipe/<recipe_id>', methods = ['GET', 'POST'])
+def recipe_page(recipe_id=None, current_user=None):
+    if 'email' in session:
+        current_user = User.find_by_email(session['email'])
+
     recipe = Recipe.get_by_id(recipe_id)
-    if recipe == None:
+    if not recipe:
         flash("Recipe not found")
         return redirect(url_for('main_page'))
 
-    return render_template('recipe.html', recipe=recipe)
+    if request.method == 'POST':  # add/remove favorite
+        try:
+            if 'add-fav' in request.form:
+                current_user.add_favorite(recipe_id)
+            elif 'rm-fav' in request.form:
+                current_user.remove_favorite(recipe_id)
+        except Exception as err:
+            flash(str(err))
+
+    return render_template('recipe.html', recipe=recipe, user=current_user)
