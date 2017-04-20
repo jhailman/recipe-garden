@@ -61,9 +61,9 @@
   <h3 class="pg-prev" style="float: left;">Prev</h3>
   {% endif %}
 
-  {% if recipes|length >= 20 %} CAN GO FORWARD
+  <!-- {% if recipes|length >= 20 %} CAN GO FORWARD -->
   <h3 class="pg-next" style="float: right;"><a href="{{ '/browse/%s' % (page + 1) }}">Next</a></h3>
-  {% else %}
+  <!-- {% else %} -->
   <h3 class="pg-next" style="float: right;">Next</h3>
   {% endif %}
 

@@ -7,7 +7,6 @@ SEARCH_BY_NAME = text("SELECT * FROM recipe WHERE name LIKE :name")
 GET_INGREDIENTS = text("SELECT * FROM recipe_ingredient WHERE recipe_id = :id")
 GET_STEPS = text("SELECT * FROM direction WHERE recipe_id = :id")
 GET_RANGE = text("SELECT * FROM recipe ORDER BY created DESC LIMIT :start, :num")
-GET_BY_AUTHOR = text("SELECT * FROM recipe WHERE author_id = :id")
 
 CREATE = text("INSERT INTO recipe (name, author_id, image_path) VALUES (:name, :author_id, :image_path)")
 ADD_STEP = text("INSERT INTO direction (recipe_id, description, ordernum) VALUES (:recipe_id, :description, :ordernum)")
@@ -95,3 +94,10 @@ class Recipe:
                 lambda ingredient: RecipeIngredient(ingredient),
                 get_db().execute(GET_INGREDIENTS, id=self.id).fetchall())
         return self.ingredients
+
+    def get_shopping_list(self):
+        """
+        Gets a list of all the ingredients needed to shop for the recipe.
+        This can be saved with ShoppingList.save()
+        """
+        pass

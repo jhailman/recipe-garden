@@ -17,7 +17,6 @@ app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with en
 
 global DATABASE_SET
 DATABASE_SET = False
-RECIPES_PER_PAGE = 20
 
 def create_db_engine():
     global DATABASE_SET
@@ -151,55 +150,22 @@ def registration_page():
 @app.route('/browse/<int:page>')
 def browse_page(page=1):
     try:
-        recipes = Recipe.get_by_range((page - 1) * RECIPES_PER_PAGE, RECIPES_PER_PAGE)
+        per_page = 20
+        recipes = Recipe.get_by_range((page - 1) * per_page, per_page)
         return render_template('browse.html', recipes=recipes, page=page)
     except Exception as err:
         flash("Error getting recipes")
         return render_template('browse.html')
 
-@app.route('/my-recipes')
-def my_recipes_page():
-    if 'email' not in session:
-        flash('Log in to submit recipes')
-        return redirect(url_for('main_page'))
-
-    try:
-        u = User.find_by_email(session['email'])
-        recipes = Recipe.get_by_author(u.id)
-        return render_template('my-recipes.html', recipes=recipes)
-    except Exception as err:
-        flash(str(err))
-        return render_template('my-recipes.html')
-
 @app.route('/favorites')
 def favorites_page():
     if 'email' in session:
         u = User.find_by_email(session['email'])
+        # app.logger.debug("GET_FAVORITES RETURNED %s" % type(u.get_favorites()[0]))
         return render_template('favorite.html', user=u)
 
     flash('Log in to add favorites')
     return redirect(url_for('main_page'))
-
-@app.route('/shopping', methods = ['GET', 'POST'])
-def shopping_list_page():
-    if 'email' not in session:
-        flash('Log in to save a shopping list')
-        return redirect(url_for('main_page'))
-
-    try:
-        u = User.find_by_email(session['email'])
-
-        if request.method == 'POST':
-            if 'shop-clr' in request.form:
-                for recipe in u.get_shopping_list_recipes():
-                    u.shopping_list_remove(recipe.id)
-                flash("Cleared shopping list")
-
-        ingredients = u.get_shopping_list_ingredients()
-        return render_template('shopping.html', shopping_list=ingredients)
-    except Exception as err:
-        flash(str(err))
-        render_template('shopping.html')
 
 @app.route('/new-recipe', methods = ['GET', 'POST'])
 def new_recipe_page():
@@ -242,9 +208,6 @@ def recipe_page(recipe_id=None, current_user=None):
                 current_user.add_favorite(recipe_id)
             elif 'rm-fav' in request.form:
                 current_user.remove_favorite(recipe_id)
-            elif 'shop-add' in request.form:
-                current_user.shopping_list_add(recipe_id)
-                flash("Added ingredients to shopping list")
         except Exception as err:
             flash(str(err))
 
