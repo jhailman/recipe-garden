@@ -181,6 +181,7 @@ def favorites_page():
 
 @app.route('/shopping', methods = ['GET', 'POST'])
 def shopping_list_page():
+    # PLEASE MERGE
     if 'email' not in session:
         flash('Log in to save a shopping list')
         return redirect(url_for('main_page'))
