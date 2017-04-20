@@ -17,6 +17,7 @@ app.config.from_envvar('RECIPE_GARDEN_SETTINGS', silent=True) # Override with en
 
 global DATABASE_SET
 DATABASE_SET = False
+RECIPES_PER_PAGE = 20
 
 def create_db_engine():
     global DATABASE_SET
@@ -150,8 +151,7 @@ def registration_page():
 @app.route('/browse/<int:page>')
 def browse_page(page=1):
     try:
-        per_page = 20
-        recipes = Recipe.get_by_range((page - 1) * per_page, per_page)
+        recipes = Recipe.get_by_range((page - 1) * RECIPES_PER_PAGE, RECIPES_PER_PAGE)
         return render_template('browse.html', recipes=recipes, page=page)
     except Exception as err:
         flash("Error getting recipes")
@@ -205,19 +205,20 @@ def shopping_list_page():
 def new_recipe_page():
     if request.method == 'POST':
         try:
-            # Add new recipe to database
-            recipe_name = request.form['name']
-            Recipe.create(recipe_name, User.find_by_email(session['email']),
-                request.form['img-path'], request.form['directions'],
-                request.form['ingredients'])
+            user = User.find_by_email(session['email'])
+            recipe = Recipe.create(request.form['name'], user.id,
+                request.form['img_path'])
 
-            # Display new recipe's page
-            # new_recipe_id = (Recipe.search_by_name(recipe_name)).id
-            new_recipe_id = 1
-            flash("Recipe successfully created")
-            return redirect(url_for('recipe_page', recipe_id=new_recipe_id))
+            for (amount, ingredient) in zip(request.form.getlist('ingredient_qty'), request.form.getlist('ingredient_name')):
+                app.logger.debug((amount, ingredient))
+                recipe.add_ingredient(amount, ingredient)
+
+            for (count, step) in enumerate(request.form.getlist('step'), start=1):
+                recipe.add_step(step, count)
+
+            return redirect(url_for('recipe_page', recipe_id=recipe.id))
         except Exception as err:
-            flash(str(err))
+            flash(repr(err))
             return render_template('new-recipe.html')
     else:
         if 'username' in session:
