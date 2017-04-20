@@ -7,7 +7,7 @@ SEARCH_BY_NAME = text("SELECT * FROM recipe WHERE name LIKE :name")
 GET_INGREDIENTS = text("SELECT * FROM recipe_ingredient WHERE recipe_id = :id")
 GET_STEPS = text("SELECT * FROM direction WHERE recipe_id = :id")
 GET_RANGE = text("SELECT * FROM recipe ORDER BY created DESC LIMIT :start, :num")
-GET_BY_AUTHOR = text("SELECT * FROM recipe WHERE author_id = :id")
+GET_BY_AUTHOR = text("SELECT * FROM recipe WHERE author_id = :id ORDER BY created DESC")
 
 CREATE = text("INSERT INTO recipe (name, author_id, image_path) VALUES (:name, :author_id, :image_path)")
 ADD_STEP = text("INSERT INTO direction (recipe_id, description, ordernum) VALUES (:recipe_id, :description, :ordernum)")
@@ -48,6 +48,14 @@ class Recipe:
         """Searches for recipes which are similar to the name"""
         # TODO turn into %stuff% regex safely
         return Recipe(get_db().execute(SEARCH_BY_NAME, name=name))
+
+    @staticmethod
+    def get_by_author(author_id):
+        all_rows = get_db().execute(GET_BY_AUTHOR, id=author_id).fetchall()
+        all_recipes = []
+        for row in all_rows:
+            all_recipes.append(Recipe(row))
+        return all_recipes
 
     @staticmethod
     def get_by_range(start, num):

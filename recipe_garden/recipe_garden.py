@@ -160,12 +160,11 @@ def browse_page(page=1):
 @app.route('/my-recipes')
 def my_recipes_page():
     if 'email' not in session:
-        flash('Log in to submit recipes')
+        flash("Log in to add recipes")
         return redirect(url_for('main_page'))
 
     try:
-        u = User.find_by_email(session['email'])
-        recipes = Recipe.get_by_author(u.id)
+        recipes = Recipe.get_by_author(User.find_by_email(session['email']).id)
         return render_template('my-recipes.html', recipes=recipes)
     except Exception as err:
         flash(str(err))
@@ -182,6 +181,7 @@ def favorites_page():
 
 @app.route('/shopping', methods = ['GET', 'POST'])
 def shopping_list_page():
+    # PLEASE MERGE
     if 'email' not in session:
         flash('Log in to save a shopping list')
         return redirect(url_for('main_page'))
