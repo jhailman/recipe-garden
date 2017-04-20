@@ -76,10 +76,3 @@ class Recipe:
                 lambda ingredient: RecipeIngredient(ingredient),
                 get_db().execute(GET_INGREDIENTS, id=self.id).fetchall())
         return self.ingredients
-
-    def get_shopping_list(self):
-        """
-        Gets a list of all the ingredients needed to shop for the recipe.
-        This can be saved with ShoppingList.save()
-        """
-        pass
