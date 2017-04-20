@@ -157,6 +157,19 @@ def browse_page(page=1):
         flash("Error getting recipes")
         return render_template('browse.html')
 
+@app.route('/my-recipes')
+def my_recipes_page():
+    if 'email' not in session:
+        flash("Log in to add recipes")
+        return redirect(url_for('main_page'))
+
+    try:
+        recipes = Recipe.get_by_author(User.find_by_email(session['email']).id)
+        return render_template('my-recipes.html', recipes=recipes)
+    except Exception as err:
+        flash(str(err))
+        return render_template('my-recipes.html')
+
 @app.route('/favorites')
 def favorites_page():
     if 'email' in session:
