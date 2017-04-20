@@ -95,4 +95,4 @@ with password `password`.
 
 - virtualenv 1.9: https://virtualenv.pypa.io/en/stable/
 - Flask 0.12: http://flask.pocoo.org/docs/0.12/installation/
-- **
+- SQLAlchemy 1.1.9 http://www.sqlalchemy.org/
