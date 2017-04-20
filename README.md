@@ -75,67 +75,24 @@ Running the app will require setting some environment variables:
 - `FLASK_APP="recipe_garden/recipe_garden.py"`: Flask requires this variable to be
 the relative path to the app's main python file. This value works when running from
 the Git project root.
-
-The user in question will need `INSERT,SELECT,DELETE,CREATE,DROP` permissions to the
-`recipe_schema` database.
+- `FLASK_DEBUG=true` This is optional to help with debugging.
 
 ## The database
 
-Flask setup found at http://flask.pocoo.org/docs/0.12/installation/
-as well as the tutorial http://flask.pocoo.org/docs/0.12/tutorial/packaging/#tutorial-packaging
+The user specified by the environment variables will need `INSERT,SELECT,DELETE,CREATE,DROP` 
+permissions to the `recipe_schema` database.
 
-This project uses `virtualenv` to set up the dependencies. It's also
-a pip package. This means the pyhton version and dependencies we use don't affect
-the rest of your python installation.
+The `recipe_schema` database will automatically be created if it does not exist. The database
+and tables will be populated with some example recipes and an example user.
 
-1. Clone the repo
+## Running the project
 
-```
-$ git clone ... project-dir
-```
-2. Set up virtualenv
+Once the project is installed and environment variables are set, the site can be run with
+`flask run`. It will show up at http://localhost:5000/. The default user is `email@example.com`
+with password `password`.
 
-Install `virtualenv` if you don't have it (may need sudo)
+## References
 
-```
-$ pip install virtualenv
-```
-
-Start the `virtualenv` folder for the project somewhere
-
-```
-$ cd project-dir
-
-$ virtualenv .env # Create some folder somewhere for virtualenv to run in
-
-$ . .env/bin/activate # Activate the virtualenv
-```
-
-This will wrap the shell prompt; you can leave `virtualenv` with
-
-```
-$ deactivate
-```
-
-3. Install Flask in the `virtualenv`
-
-```
-$ pip install Flask
-```
-
-4. Install the package in the `virtualenv`
-
-The project works like a python package, running this will
-install its dependencies (in the virtualenv) and let you run locally.
-
-```
-$ pip install --editable .
-```
-
-5. Run the server locally
-The main file is located in `/recipe_garden/recipe_garden.py`.
-```
-python recipe_garden.py
-```
-
-See the source code for other flask commands we have registered.
+- virtualenv 1.9: https://virtualenv.pypa.io/en/stable/
+- Flask 0.12: http://flask.pocoo.org/docs/0.12/installation/
+- **
