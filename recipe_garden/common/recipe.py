@@ -66,6 +66,7 @@ class Recipe:
             all_recipes.append(Recipe(row))
         return all_recipes
 
+    @staticmethod
     def create(name, author_id, image_path):
         id = get_db().execute(CREATE, author_id=author_id, name=name, image_path=image_path).lastrowid
         return Recipe({ 'id': id, 'author_id': author_id, 'name': name, 'image_path': image_path, 'created': datetime.now() })
