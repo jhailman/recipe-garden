@@ -7,10 +7,11 @@
   <h1>Add a new recipe</h1>
   <form action"{{ url_for('new_recipe_page') }}" method="post" autocomplete="on">
     <p class="explanation">
-      The name of your recipe.
+      The name of your recipe, and an optional URL for an image of it.
     </p>
     <p>
-      <input name="recipe_name" placeholder="{{ session.username }}'s recipe" />
+      <input name="name" placeholder="{{ session.username }}'s recipe" />
+      <input name="img_path" placeholder="Optional image URL" />
     </p>
 
     <h2>Ingredients</h4>
