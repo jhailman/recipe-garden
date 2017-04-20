@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block body %}
+
+<div class="text-body">
+
+  <h1>Shopping List</h1>
+  {% if shopping_list|length == 0 %}
+  <h4>Your shopping list is empty! <a href="/browse">Browse recipes?</a></h4>
+  {% else %}
+
+    <ul>
+      {% for item in shopping_list %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+
+    <form action="{{ url_for('shopping_list_page') }}" method="post">
+      <input type="submit" name="shop-clr" class="shop-btn" value="Clear shopping list?" />
+    </form>
+  {% endif %}
+
+</div>
+
+{% endblock %}
