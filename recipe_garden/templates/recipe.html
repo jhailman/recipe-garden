@@ -26,15 +26,21 @@
 
   <!-- FAVORITE -->
   {% if user %}
-    {% if recipe in user.get_favorites() %}
       <form action="{{ url_for('recipe_page', recipe_id=recipe.id) }}" method="post">
-        <input type="submit" name="rm-fav" class="fav-btn" value="Remove from favorites"/>
+        {% if recipe in user.get_favorites() %}
+          <input type="submit" name="rm-fav" class="fav-btn" value="Remove from favorites"/>
+        {% else %}
+          <input type="submit" name="add-fav" class="fav-btn" value="Add to favorites" />
+        {% endif %}
       </form>
-    {% else %}
-      <form action="{{ url_for('recipe_page', recipe_id=recipe.id) }}" method="post">
-        <input type="submit" name="add-fav" class="fav-btn" value="Add to favorites" />
-      </form>
-    {% endif %}
+
+    <form action="{{ url_for('recipe_page', recipe_id=recipe.id) }}" method="post">
+      {% if recipe in user.get_shopping_list_recipes() %}
+        <input type="submit" name="shop-add" class="shop-btn" style="color: grey;" value="Already in shopping list" disabled/>
+      {% else %}
+        <input type="submit" name="shop-add" class="shop-btn" value="Add to shopping list" />
+      {% endif %}
+    </form>
   {% endif %}
   <!-- END FAVORITE -->
 

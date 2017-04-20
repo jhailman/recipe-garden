@@ -7,6 +7,7 @@ GET_BY_ID = text("SELECT * FROM user WHERE id = :id")
 
 FIND_BY_EMAIL = text("SELECT * FROM user WHERE email = :email")
 FIND_BY_NAME = text("SELECT * FROM user WHERE name = :name")
+
 REGISTER = text("INSERT INTO user (name, email, password) VALUES (:name, :email, :password)")
 
 GET_RECIPES = text("SELECT * FROM recipe WHERE user_id = :user_id")
@@ -14,7 +15,10 @@ GET_FAVORITES = text("SELECT * FROM favorites WHERE user_id = :user_id")
 GET_SHOPPING_LIST = text("SELECT * FROM shopping_list WHERE user_id = :user_id")
 
 INSERT_FAVORITE = text("INSERT INTO favorites (user_id, recipe_id) VALUES (:uid, :rid)")
+INSERT_SHOPPING = text("INSERT INTO shopping_list (user_id, recipe_id) VALUES (:uid, :rid)")
+
 DELETE_FAVORITE = text("DELETE FROM favorites WHERE recipe_id = :recipe_id")
+DELETE_SHOPPING = text("DELETE FROM shopping_list WHERE recipe_id = :recipe_id")
 
 class User:
     """User representation in DB and static methods for access"""
@@ -23,10 +27,10 @@ class User:
         self.name = row['name']
         self.email = row['email']
         self.password = row['password']
-        # Cached fields
-        self.recipes = None
-        self.favorites = None
-        self.shopping_list = None
+        # Cached fields; all list of Recipes
+        self.recipes = []
+        self.favorites = []
+        self.shopping_list = []
 
     def __repr__(self):
         return '<User %r (%r)>' % (self.name, self.email)
@@ -89,7 +93,6 @@ class User:
     def get_favorites(self):
         """Gets the user's favorite recipes"""
         if not self.favorites:
-            self.favorites = []
             all_rows = get_db().execute(GET_FAVORITES, user_id=self.id).fetchall()
             for row in all_rows:
                 self.favorites.append(Recipe.get_by_id(row['recipe_id']))
@@ -97,11 +100,7 @@ class User:
 
     def add_favorite(self, recipe_id):
         """Adds a recipe to a user's favorite recipes"""
-        if not self.favorites:
-            self.favorites = [Recipe.get_by_id(recipe_id)]
-        else:
-            self.favorites.append(recipe_id)
-
+        self.favorites.append(Recipe.get_by_id(recipe_id))
         get_db().execute(INSERT_FAVORITE, uid=self.id, rid=recipe_id)
 
     def remove_favorite(self, recipe_id):
@@ -110,8 +109,29 @@ class User:
         self.favorites.remove(Recipe.get_by_id(recipe_id))
         get_db().execute(DELETE_FAVORITE, recipe_id=recipe_id)
 
-    def get_shopping_list(self):
-        """Gets the user's shopping list"""
+    def get_shopping_list_recipes(self):
+        """Gets the list of recipes in the user's shopping list"""
         if not self.shopping_list:
-            self.shopping_list = get_db().execute(GET_SHOPPING_LIST, user_id=self.id).fetchall()
+            all_rows = get_db().execute(GET_SHOPPING_LIST, user_id=self.id).fetchall()
+            for row in all_rows:
+                self.shopping_list.append(Recipe.get_by_id(row['recipe_id']))
         return self.shopping_list
+
+    def get_shopping_list_ingredients(self):
+        """Gets the ingredients for all the recipes in the user's shopping list"""
+        all_ingredients = []
+        for r in self.get_shopping_list_recipes():
+            all_ingredients += r.get_ingredients()
+        all_ingredients.sort(key=lambda x: x.ingredient, reverse=False)
+        return all_ingredients
+
+    def shopping_list_add(self, recipe_id):
+        """Adds a recipe's ingredients to user's shopping list"""
+        self.shopping_list.append(Recipe.get_by_id(recipe_id))
+        get_db().execute(INSERT_SHOPPING, uid=self.id, rid=recipe_id)
+
+    def shopping_list_remove(self, recipe_id):
+        """Removes a recipe's ingredients from user's shopping list"""
+        self.get_shopping_list_recipes()
+        self.shopping_list.remove(Recipe.get_by_id(recipe_id))
+        get_db().execute(DELETE_SHOPPING, recipe_id=recipe_id)
